@@ -65,17 +65,19 @@ export default async function HintsPage() {
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="min-w-0 space-y-12">
           {puzzle ? (
-            <section aria-labelledby="hints" data-reveal-scope>
-              <div className="flex flex-wrap items-end justify-between gap-3">
-                <h2 id="hints" className="heading">
-                  Where is {puzzle.guestName} from?
-                </h2>
-                <RevealAll label="Open every hint" />
+            <section aria-labelledby="hints">
+              <div data-reveal-scope>
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <h2 id="hints" className="heading">
+                    Where is {puzzle.guestName} from?
+                  </h2>
+                  <RevealAll label="Open every hint" />
+                </div>
+                <div className="mt-5 grid gap-3">
+                  <HintEnvelopes puzzle={puzzle} />
+                </div>
               </div>
-              <div className="mt-5 grid gap-3">
-                <HintEnvelopes puzzle={puzzle} />
-                <ClueRoadmap puzzle={puzzle} />
-              </div>
+              <div className="mt-3"><ClueRoadmap puzzle={puzzle} /></div>
               <h2 className="heading mt-12">Still stuck?</h2>
               <p className="mt-3 max-w-[62ch] muted">
                 The answer is below. You can also read the{" "}
@@ -94,6 +96,7 @@ export default async function HintsPage() {
                 data={articleJsonLd({
                   headline: `Originle #${number} hints (${formatLongDate(today)})`,
                   path: "/hints",
+                  citation: `${puzzle.sourceUrl}day.js`,
                   published: puzzle.firstSeenAt,
                   modified: puzzle.updatedAt,
                 })}

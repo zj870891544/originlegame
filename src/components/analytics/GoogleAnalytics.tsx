@@ -9,12 +9,12 @@ export function GoogleAnalytics({ measurementId }: { measurementId: string }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    trackPageView(measurementId, pathname);
+    trackPageView(measurementId, `${pathname}${window.location.search}`);
   }, [measurementId, pathname]);
 
   useEffect(() => {
     const restored = (event: PageTransitionEvent) => {
-      if (event.persisted) trackPageView(measurementId, window.location.pathname, { again: true });
+      if (event.persisted) trackPageView(measurementId, `${window.location.pathname}${window.location.search}`, { again: true });
     };
     const count = (element: HTMLElement) => {
       const name = element.dataset.gaEvent;

@@ -2,7 +2,8 @@ import { SITE } from "@/lib/seo/site";
 
 /**
  * GA4, only on the HTTPS production host and only when a measurement ID is
- * configured. One pageview per document, without query strings or fragments,
+ * configured. One pageview per route, retaining only short campaign labels from
+ * approved UTM parameters. Fragments and other query strings are dropped,
  * advertising signals off. Events carry a fixed name and at most a hint level.
  */
 
@@ -12,8 +13,28 @@ export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[number];
 type AnalyticsWindow = Window & {
   dataLayer?: unknown[];
   gtag?: (...args: unknown[]) => void;
-  __originleAnalytics?: { measurementId: string; lastLocation: string };
+  __originleAnalytics?: { measurementId: string; lastLocation: string; lastReferrer: string };
 };
+
+const CAMPAIGN_PARAMETERS = ["utm_source", "utm_medium", "utm_campaign", "utm_id", "utm_source_platform", "utm_content", "utm_term"] as const;
+
+function pageLocation(value: string): string | undefined {
+  if (!value.startsWith("/") || value.startsWith("//")) return;
+  try {
+    const url = new URL(value, SITE.origin);
+    if (url.origin !== SITE.origin) return;
+    const campaign = new URLSearchParams();
+    for (const key of CAMPAIGN_PARAMETERS) {
+      const values = url.searchParams.getAll(key);
+      // Labels only: exclude email addresses, URLs, free text and ambiguous duplicates.
+      if (values.length === 1 && /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/.test(values[0])) campaign.set(key, values[0]);
+    }
+    const query = campaign.toString();
+    return `${SITE.origin}${url.pathname}${query ? `?${query}` : ""}`;
+  } catch {
+    return;
+  }
+}
 
 export function isGaMeasurementId(value: string | undefined): value is string {
   return typeof value === "string" && /^G-[A-Z0-9]+$/.test(value);
@@ -32,12 +53,11 @@ function pageReferrer(value: string): string {
   }
 }
 
-export function trackPageView(measurementId: string, pathname: string, { again = false } = {}): void {
+export function trackPageView(measurementId: string, pagePath: string, { again = false } = {}): void {
   if (!isGaMeasurementId(measurementId) || typeof window === "undefined" || window.location.hostname !== SITE.host || window.location.protocol !== "https:") return;
   const browser = window as AnalyticsWindow;
-  const path = pathname.split(/[?#]/, 1)[0];
-  if (!path.startsWith("/") || path.startsWith("//")) return;
-  const location = `${SITE.origin}${path}`;
+  const location = pageLocation(pagePath);
+  if (!location) return;
   const previous = browser.__originleAnalytics;
   if (!again && previous?.measurementId === measurementId && previous.lastLocation === location) return;
 
@@ -48,7 +68,10 @@ export function trackPageView(measurementId: string, pathname: string, { again =
     browser.dataLayer!.push(arguments);
   };
   const gtag = browser.gtag;
-  const page = { page_location: location, page_referrer: pageReferrer(document.referrer), page_title: document.title };
+  const referrer = previous?.measurementId === measurementId
+    ? (previous.lastLocation === location ? previous.lastReferrer : pageReferrer(previous.lastLocation))
+    : pageReferrer(document.referrer);
+  const page = { page_location: location, page_referrer: referrer, page_title: document.title };
   if (!previous) {
     gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
     gtag("js", new Date());
@@ -61,7 +84,7 @@ export function trackPageView(measurementId: string, pathname: string, { again =
   }
   gtag("set", page);
   gtag("event", "page_view", { ...page, send_to: measurementId });
-  browser.__originleAnalytics = { measurementId, lastLocation: location };
+  browser.__originleAnalytics = { measurementId, lastLocation: location, lastReferrer: referrer };
 }
 
 export function trackEvent(name: AnalyticsEvent, level?: number): void {

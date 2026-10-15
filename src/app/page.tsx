@@ -16,12 +16,9 @@ import { formatLongDate } from "@/lib/time/game-day";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { number, puzzle, today } = await getToday();
   return pageMetadata({
-    title: `Originle Game: Today's Answer & Hints (#${number})`,
-    description: puzzle
-      ? `Originle #${number} for ${formatLongDate(today)}: where is ${puzzle.guestName} from? Three spoiler-free hints, the answer when you want it, and every past guest.`
-      : `Originle #${number} for ${formatLongDate(today)}: hints and the answer appear soon after midnight Eastern. Play the daily guess-the-country game and browse past guests.`,
+    title: "Originle Game: Daily Country Guessing Guide",
+    description: "Learn how the Originle daily country guessing game works. Find spoiler-free hints, today's answer, exact scoring rules and an archive of past guests.",
     path: "/",
   });
 }
@@ -68,7 +65,7 @@ export default async function HomePage() {
       <section className="shell grid gap-10 pb-6 pt-10 md:pt-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
         <div className="lg:sticky lg:top-24">
           <p className="font-semibold text-teal">{formatLongDate(today)}</p>
-          <h1 className="display mt-3 max-w-[13ch]">Originle answer today, with hints first</h1>
+          <h1 className="display mt-3 max-w-[13ch]">Originle game: meet a guest, guess their country</h1>
           <p className="mt-5 max-w-[46ch] text-lg leading-relaxed muted md:text-xl">
             Originle is the daily game where you meet one person and guess the country they come from. Stuck on today&apos;s guest? Open a
             hint, then another. The answer waits until you ask.
@@ -76,6 +73,9 @@ export default async function HomePage() {
           <div className="mt-7 flex flex-wrap gap-3">
             <Link href="/hints" className="btn btn-primary">
               Get a hint
+            </Link>
+            <Link href="/today" className="btn btn-ghost">
+              Today&apos;s answer
             </Link>
             <Link href="/archive" className="btn btn-ghost">
               Past answers

@@ -11,6 +11,7 @@ import { PageShell } from "@/components/shared/PageShell";
 import { getToday } from "@/lib/puzzle/request";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { puzzleAnswerSummary } from "@/lib/seo/puzzle";
 import { formatLongDate } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,7 @@ export default async function TodayPage() {
     {
       question: `What is the Originle answer today, #${number}?`,
       answer: puzzle
-        ? `Originle #${number} for ${formatLongDate(today)} features ${puzzle.guestName}. The country is in the answer envelope above; open it when you're ready.`
+        ? puzzleAnswerSummary(puzzle)
         : `Originle #${number} for ${formatLongDate(today)} will appear on this page soon after midnight Eastern time.`,
     },
     {
@@ -70,10 +71,19 @@ export default async function TodayPage() {
               <PuzzleCard puzzle={puzzle} title={`Where is ${puzzle.guestName} from?`} showNearbyLink={false} />
               <NearbyCountries puzzle={puzzle} />
               <SourceNote puzzle={puzzle} />
+              <p className="text-sm muted">
+                For this date&apos;s hints, answer and sources after the next reset, use the{" "}
+                <Link href={`/archive/${puzzle.number}`} className="inline-link">
+                  permanent page for Originle #{puzzle.number}
+                </Link>
+                .
+              </p>
               <JsonLd
                 data={articleJsonLd({
                   headline: `Originle #${number} answer and hints (${formatLongDate(today)})`,
                   path: "/today",
+                  description: puzzleAnswerSummary(puzzle),
+                  citation: `${puzzle.sourceUrl}day.js`,
                   published: puzzle.firstSeenAt,
                   modified: puzzle.updatedAt,
                 })}

@@ -6,7 +6,7 @@ const number = puzzleNumberOn(gameDateAt(new Date()));
 test.describe("daily pages", () => {
   test("home shows today's guest with the answer folded away", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Originle answer today");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Originle game");
     await expect(page.getByRole("heading", { name: `Where is Fixture ${number} from?` })).toBeVisible();
     const answer = page.locator("details", { hasText: `Originle #${number} answer` });
     await expect(answer).not.toHaveAttribute("open", "");
@@ -19,14 +19,28 @@ test.describe("daily pages", () => {
     const html = (await (await request.get("/today")).text()).replace(/<!-- -->/g, "");
     expect(html).toContain(`Originle answer today: #${number}`);
     expect(html).toContain("represents Kenya");
+    expect(html).toContain(`The Originle #${number} answer for`);
+    expect(html).toContain("is Kenya. The guest is Fixture");
+    expect(html).toContain(`href="/archive/${number}"`);
+    expect(html).toContain(`"citation":"https://originle.io/fixture-${number}/day.js"`);
     expect(html).toContain('"@type":"Article"');
     expect(html).toContain('<link rel="canonical" href="https://originlegame.app/today"');
   });
 
-  test("reveal all opens every hint", async ({ page }) => {
+  test("opening every hint leaves the answer and clue titles folded", async ({ page }) => {
     await page.goto("/hints");
+    const hints = page.locator('details[data-ga-event="hint_open"]');
+    const answer = page.locator('details[data-ga-event="answer_reveal"]');
+    const roadmap = page.locator('details[data-ga-event="roadmap_open"]');
     await page.getByRole("button", { name: "Open every hint" }).click();
+    await expect(hints).toHaveCount(3);
+    for (const hint of await hints.all()) await expect(hint).toHaveAttribute("open", "");
     await expect(page.getByText('starts with "K" and has 5 letters')).toBeVisible();
+    await expect(answer).not.toHaveAttribute("open", "");
+    await expect(answer.locator(".stamp")).toBeHidden();
+    await expect(roadmap).not.toHaveAttribute("open", "");
+    await page.getByRole("button", { name: "Fold everything away" }).click();
+    for (const hint of await hints.all()) await expect(hint).not.toHaveAttribute("open", "");
   });
 
   test("archive lists every stored puzzle and links to its page", async ({ page }) => {
@@ -65,7 +79,10 @@ test.describe("site files", () => {
   });
 
   test("llms.txt names today's puzzle", async ({ request }) => {
-    expect(await (await request.get("/llms.txt")).text()).toContain(`Originle #${number}`);
+    const text = await (await request.get("/llms.txt")).text();
+    expect(text).toContain(`Originle #${number}`);
+    expect(text).toContain(`Permanent page for this date: https://originlegame.app/archive/${number}`);
+    expect(text).toContain(`Public source: https://originle.io/fixture-${number}/day.js`);
   });
 
   test("the admin sync refuses requests without the token", async ({ request }) => {

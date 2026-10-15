@@ -6,7 +6,7 @@ import { SITE, absoluteUrl } from "./site";
 /** A plain-text summary of the site for language models (llmstxt.org). */
 export function llmsText(state: TodayState): string {
   const today = state.puzzle
-    ? `Today is Originle #${state.number} (${formatLongDate(state.today)}). The guest is ${state.puzzle.guestName}, who represents ${countryName(state.puzzle.countryCode)}. Hints: ${absoluteUrl("/hints")}. Answer page: ${absoluteUrl("/today")}.`
+    ? `Today is Originle #${state.number} (${formatLongDate(state.today)}). The guest is ${state.puzzle.guestName}, who represents ${countryName(state.puzzle.countryCode)}. Hints: ${absoluteUrl("/hints")}. Answer page: ${absoluteUrl("/today")}. Permanent page for this date: ${absoluteUrl(`/archive/${state.puzzle.number}`)}. Public source: ${state.puzzle.sourceUrl}day.js.`
     : `Today is Originle #${state.number} (${formatLongDate(state.today)}); its guest is published soon after midnight in New York.`;
   const yesterday = state.yesterday
     ? `Yesterday, Originle #${state.yesterday.number}: ${state.yesterday.guestName} represented ${countryName(state.yesterday.countryCode)}.`

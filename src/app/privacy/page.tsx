@@ -20,7 +20,8 @@ export default function PrivacyPage() {
         </p>
         <p>
           When analytics is switched on, we use Google Analytics 4 to count page views and a few interactions (such as opening a hint),
-          without the page&apos;s query string, with Google signals and ad personalisation turned off, and with advertising storage denied.
+          keeping only short campaign tags (such as utm_source=chatgpt.com) and excluding other query parameters and fragments.
+          Google signals and ad personalisation are turned off, and advertising storage is denied.
           Google may still set its own analytics cookies; you can block them with any content blocker and the site works the same.
         </p>
         <p>

@@ -9,6 +9,7 @@ import { PageShell } from "@/components/shared/PageShell";
 import { getPuzzleByNumber, getToday } from "@/lib/puzzle/request";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { puzzleAnswerSummary } from "@/lib/seo/puzzle";
 import { SITE } from "@/lib/seo/site";
 import { formatLongDate, formatWeekday } from "@/lib/time/game-day";
 
@@ -105,6 +106,8 @@ export default async function PuzzlePage({ params }: Props) {
         data={articleJsonLd({
           headline: `Originle #${puzzle.number} answer and hints (${date})`,
           path: `/archive/${puzzle.number}`,
+          description: puzzleAnswerSummary(puzzle),
+          citation: `${puzzle.sourceUrl}day.js`,
           published: puzzle.firstSeenAt,
           modified: puzzle.updatedAt,
         })}

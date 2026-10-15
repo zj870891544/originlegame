@@ -110,9 +110,21 @@ npm run sync:official -- --server https://originlegame.<account>.workers.dev
 Then add `originlegame.app` and `www.originlegame.app` as **Custom Domains** on the Worker (the domain's DNS must
 be on Cloudflare). Recommended: a rate-limiting rule on `/api/admin/*`.
 
-After launch: verify the domain in Google Search Console and Bing Webmaster Tools and submit
-`https://originlegame.app/sitemap.xml`; create a GA4 web stream (Enhanced Measurement off) and set
-`GA_MEASUREMENT_ID` in `wrangler.jsonc`; set up Cloudflare Email Routing for `hello@originlegame.app`.
+Search setup: verify the domain in Google Search Console and Bing Webmaster Tools and submit
+`https://originlegame.app/sitemap.xml`. Keep the Google verification TXT record in Cloudflare DNS and
+`public/BingSiteAuth.xml` so ownership remains verified.
+
+GA4 uses web stream `G-C5F3XYH0N1` (`Originle Game Web`). Enhanced Measurement is off: the app sends page views
+and interactions itself, avoiding duplicate history-change page views. Attribution retains short, approved UTM
+campaign tags and the actual referring site; other query parameters and fragments are excluded. Use the traffic
+acquisition report's session source/medium to measure visits from `chatgpt.com` and `chat.openai.com`.
+
+The production robots rules allow `OAI-SearchBot` (ChatGPT search), `ChatGPT-User` (user-requested fetching), and
+`GPTBot` (training, a separate choice). The answer, dated summary and public source are server-rendered. The
+`llms.txt` summary also links to each day's permanent archive page. These help discovery and citation; they do
+not guarantee indexing, ranking or traffic. Keep Cloudflare's per-crawler block controls off for permitted bots.
+
+Optional: set up Cloudflare Email Routing for `hello@originlegame.app`.
 
 ## Environment
 
@@ -123,5 +135,5 @@ After launch: verify the domain in Google Search Console and Bing Webmaster Tool
 | `PAGE_CACHE` | var | `off` always renders (tests) |
 | `HTTPS_ONLY` | var | `off` serves plain HTTP (tests) |
 | `INDEXNOW_KEY` | var | Public IndexNow key, matches `public/<key>.txt`; `off` disables announcements |
-| `GA_MEASUREMENT_ID` | var (unset) | GA4 stream; analytics only run on the HTTPS production host |
+| `GA_MEASUREMENT_ID` | var | GA4 stream; analytics only run on the HTTPS production host |
 | `ADMIN_TOKEN` | secret / `.dev.vars` | Enables `POST /api/admin/sync` |

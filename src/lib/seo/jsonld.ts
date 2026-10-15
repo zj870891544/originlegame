@@ -68,6 +68,9 @@ export function breadcrumbJsonLd(crumbs: Crumb[]): JsonLd {
 export interface DatedPage {
   headline: string;
   path: string;
+  description?: string;
+  /** The public primary source used for this page's factual claims. */
+  citation?: string;
   /** ISO instants taken from the stored record, never from the clock. */
   published: string;
   modified: string;
@@ -78,7 +81,10 @@ export function articleJsonLd(page: DatedPage): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${url}#article`,
     headline: page.headline,
+    ...(page.description ? { description: page.description } : {}),
+    ...(page.citation ? { citation: page.citation } : {}),
     url,
     mainEntityOfPage: url,
     datePublished: page.published,

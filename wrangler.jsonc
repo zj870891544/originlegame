@@ -20,6 +20,7 @@
   "vars": {
     // Canonical production origin. Any other host (workers.dev, localhost) is served noindex.
     "SITE_URL": "https://originlegame.app",
+    "GA_MEASUREMENT_ID": "G-C5F3XYH0N1",
     // Rendered pages are kept in the edge cache (see src/lib/edge/page-cache.ts). "off" always renders.
     "PAGE_CACHE": "on",
     // Requests for the production host over plain HTTP are redirected to HTTPS. "off" serves them as they come.

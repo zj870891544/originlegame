@@ -29,12 +29,19 @@ export default function AboutPage() {
           Originle publishes a small data file for each guest once their day has begun. A few minutes after midnight in New York, this
           site reads that file and stores the guest&apos;s name, the country they represent, the titles of the eight clues and the
           game&apos;s border-to-border distances to every other country. Files for days that haven&apos;t started are closed, so this
-          site can&apos;t see a guest early and never publishes one before the game does. The site checks again every half hour and
-          follows any change the game makes.
+          site can&apos;t see a guest early and never publishes one before the game does. It checks for newly released guests every
+          half hour, more often around the reset, and rechecks today&apos;s stored data every two hours for corrections.
+        </p>
+        <p>
+          The public <a href="https://originle.io/daily-config.js" className="inline-link">Originle daily schedule</a> supplies
+          the puzzle order and dates. Each answer page links to that guest&apos;s official page; its published <code>day.js</code> file
+          supplies the answer, clue titles and distances. The &quot;Added&quot; and &quot;updated&quot; times on this site describe
+          when we first stored the record and when its content changed, rather than the time someone opened the page.
         </p>
         <p>
           We don&apos;t copy the guests&apos; videos, photos or captions. Country names follow the game&apos;s own guess list; capitals and
-          official languages come from the open countries-list dataset, and regions follow the UN geoscheme.
+          official languages come from the open <a href="https://github.com/annexare/Countries" className="inline-link">countries-list dataset</a>,
+          and regions follow the <a href="https://unstats.un.org/unsd/methodology/m49/" className="inline-link">UN M49 geoscheme</a>.
         </p>
 
         <h2 className="heading pt-6">How the hints are written</h2>
