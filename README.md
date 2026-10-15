@@ -116,8 +116,12 @@ Search setup: verify the domain in Google Search Console and Bing Webmaster Tool
 
 GA4 uses web stream `G-C5F3XYH0N1` (`Originle Game Web`). Enhanced Measurement is off: the app sends page views
 and interactions itself, avoiding duplicate history-change page views. Attribution retains short, approved UTM
-campaign tags and the actual referring site; other query parameters and fragments are excluded. Use the traffic
-acquisition report's session source/medium to measure visits from `chatgpt.com` and `chat.openai.com`.
+campaign tags and the actual referring site; other query parameters and fragments are excluded. A link with only
+`utm_source=chatgpt.com` gets `utm_medium=ai-assistant` in its GA page location, including when no browser referrer is
+available. An explicit medium is preserved, and the browser URL is unchanged. In GA's **Reports → Acquisition →
+Traffic acquisition**, select **Session source / medium** and filter for `chatgpt.com / ai-assistant` (or select
+the **AI Assistant** default channel). This follows [Google's channel definition](https://support.google.com/analytics/answer/9756891?hl=en).
+Untagged visits with a real `chatgpt.com` or `chat.openai.com` referrer continue to use GA's normal attribution.
 
 The production robots rules allow `OAI-SearchBot` (ChatGPT search), `ChatGPT-User` (user-requested fetching), and
 `GPTBot` (training, a separate choice). The answer, dated summary and public source are server-rendered. The

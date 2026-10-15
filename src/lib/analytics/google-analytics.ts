@@ -26,6 +26,12 @@ function pageLocation(value: string): string | undefined {
     const campaign = new URLSearchParams();
     for (const key of CAMPAIGN_PARAMETERS) {
       const values = url.searchParams.getAll(key);
+      // ChatGPT links can supply only a source, including when the browser sends
+      // no referrer. Complete that source's medium for GA without rewriting the
+      // browser URL or overriding an explicitly supplied (even invalid) medium.
+      if (key === "utm_medium" && values.length === 0 && campaign.get("utm_source") === "chatgpt.com") {
+        campaign.set(key, "ai-assistant");
+      }
       // Labels only: exclude email addresses, URLs, free text and ambiguous duplicates.
       if (values.length === 1 && /^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/.test(values[0])) campaign.set(key, values[0]);
     }

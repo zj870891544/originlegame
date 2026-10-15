@@ -47,6 +47,40 @@ describe("privacy-minded GA attribution", () => {
     expect(pageViews()[0].page_location).toBe("https://originlegame.app/today?utm_source=chatgpt.com&utm_medium=referral");
   });
 
+  it("completes source-only ChatGPT attribution even without a browser referrer", () => {
+    Object.defineProperty(document, "referrer", { value: "" });
+    trackPageView(MEASUREMENT_ID, "/today?utm_source=chatgpt.com&token=secret#answer");
+
+    const page = {
+      page_location: "https://originlegame.app/today?utm_source=chatgpt.com&utm_medium=ai-assistant",
+      page_referrer: "",
+      page_title: "Originle hints",
+    };
+    expect(gtag).toHaveBeenCalledWith("config", MEASUREMENT_ID, expect.objectContaining(page));
+    expect(pageViews()).toEqual([{ ...page, send_to: MEASUREMENT_ID }]);
+
+    trackPageView(MEASUREMENT_ID, "/today?utm_medium=ai-assistant&utm_source=chatgpt.com");
+    expect(pageViews()).toHaveLength(1);
+  });
+
+  it("preserves an explicit ChatGPT medium", () => {
+    trackPageView(MEASUREMENT_ID, "/today?utm_source=chatgpt.com&utm_medium=partner");
+    expect(pageViews()[0].page_location).toBe("https://originlegame.app/today?utm_source=chatgpt.com&utm_medium=partner");
+  });
+
+  it.each([
+    ["utm_source=newsletter", "utm_source=newsletter"],
+    ["utm_source=chatgpt.com&utm_source=other", ""],
+    ["utm_source=https%3A%2F%2Fchatgpt.com", ""],
+    ["utm_source=chatgpt.com.evil.example", "utm_source=chatgpt.com.evil.example"],
+    ["utm_source=chatgpt.com&utm_medium=", "utm_source=chatgpt.com"],
+    ["utm_source=chatgpt.com&utm_medium=private+text", "utm_source=chatgpt.com"],
+    ["utm_source=chatgpt.com&utm_medium=one&utm_medium=two", "utm_source=chatgpt.com"],
+  ])("does not infer a medium for ambiguous or unrelated tags: %s", (query, retained) => {
+    trackPageView(MEASUREMENT_ID, `/today?${query}`);
+    expect(pageViews()[0].page_location).toBe(`https://originlegame.app/today${retained ? `?${retained}` : ""}`);
+  });
+
   it("deduplicates the same page after query reordering or irrelevant query changes", () => {
     trackPageView(MEASUREMENT_ID, "/hints?utm_source=chatgpt.com&utm_medium=referral");
     trackPageView(MEASUREMENT_ID, "/hints?utm_medium=referral&utm_source=chatgpt.com&secret=ignored#answer");
