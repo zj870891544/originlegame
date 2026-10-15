@@ -1,0 +1,15 @@
+node_modules
+.env*
+.dev.vars*
+!.dev.vars.example
+.next
+next-env.d.ts
+/dist/
+.vinext/
+.wrangler/
+# Snapshots of the local dev database are disposable; production snapshots may be kept.
+/backups/local/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.claude/scheduled_tasks.lock

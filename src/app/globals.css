@@ -1,0 +1,450 @@
+@import "tailwindcss";
+
+/*
+ * Originle Game design tokens.
+ *
+ * Paper and ink, like a travel journal: a parchment page with a faint atlas
+ * grid, green-black ink, an atlas teal for links. The airmail red and blue are
+ * spent in one place only — the envelopes that hold hints and answers — and the
+ * answer itself lands as an inked passport stamp.
+ */
+@theme {
+  --color-paper: #f3ecdf;
+  --color-paper-deep: #e9dfcd;
+  --color-card: #fffaf1;
+  --color-ink: #1d2b2a;
+  --color-ink-soft: #4e5c59;
+  --color-rule: #d6c9b3;
+  --color-teal: #1e5e5a;
+  --color-teal-wash: #dbe7e1;
+  --color-air-red: #c8413b;
+  --color-air-blue: #2f4c8c;
+  --color-gold: #b9862c;
+
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --text-display: clamp(2.4rem, 1.5rem + 4.2vw, 4.4rem);
+  --text-title: clamp(2.1rem, 1.6rem + 2.4vw, 3.3rem);
+  --text-heading: clamp(1.55rem, 1.3rem + 1vw, 2.05rem);
+}
+
+:root {
+  color-scheme: light;
+  --focus: #1e5e5a;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    /* A faint atlas grid, strongest at the top of the page. */
+    background-image:
+      linear-gradient(to bottom, transparent 0, var(--color-paper) 900px),
+      linear-gradient(to right, rgb(30 94 90 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(30 94 90 / 0.06) 1px, transparent 1px);
+    background-size: 100% 100%, 36px 36px, 36px 36px;
+    background-repeat: no-repeat, repeat, repeat;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 620;
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: #f1d79a;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .shell {
+      padding-inline: 1.75rem;
+    }
+  }
+
+  .narrow {
+    max-width: 46rem;
+  }
+
+  .display {
+    font-size: var(--text-display);
+    font-weight: 680;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .heading {
+    font-size: var(--text-heading);
+  }
+
+  .subheading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .prose-block > * + * {
+    margin-top: 1rem;
+  }
+
+  .prose-block p,
+  .prose-block li {
+    max-width: 68ch;
+  }
+
+  .prose-block ul {
+    padding-left: 1.2rem;
+    list-style: disc;
+  }
+
+  .prose-block ol {
+    padding-left: 1.3rem;
+    list-style: decimal;
+  }
+
+  .prose-block li + li {
+    margin-top: 0.4rem;
+  }
+
+  .inline-link {
+    color: var(--color-teal);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .inline-link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .muted {
+    color: var(--color-ink-soft);
+  }
+
+  /* Plain card on the page: a sheet of writing paper. */
+  .sheet {
+    background: var(--color-card);
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    box-shadow: 0 1px 0 rgb(29 43 42 / 0.04), 0 12px 28px -22px rgb(29 43 42 / 0.45);
+  }
+
+  /* Buttons and button-like links. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 2.9rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 650;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+
+  .btn-primary {
+    background: var(--color-teal);
+    color: #fffaf1;
+  }
+
+  .btn-primary:hover {
+    background: #174a47;
+  }
+
+  .btn-ghost {
+    border: 1.5px solid var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  .btn-ghost:hover {
+    background: var(--color-ink);
+    color: var(--color-card);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* ── The airmail envelope: a hint or answer that opens on request. ── */
+  .envelope {
+    position: relative;
+    border-radius: 6px;
+    background: var(--color-card);
+    padding: 5px;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-air-red) 0 12px,
+      var(--color-card) 12px 18px,
+      var(--color-air-blue) 18px 30px,
+      var(--color-card) 30px 36px
+    );
+  }
+
+  .envelope > summary,
+  .envelope > .envelope-body {
+    background: var(--color-card);
+  }
+
+  .envelope > summary {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.95rem 1.1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .envelope > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .envelope > summary:hover .envelope-action {
+    background: var(--color-ink);
+    color: var(--color-card);
+  }
+
+  .envelope[open] > summary {
+    border-radius: 3px 3px 0 0;
+    border-bottom: 1px dashed var(--color-rule);
+  }
+
+  .envelope-body {
+    border-radius: 0 0 3px 3px;
+    padding: 1rem 1.1rem 1.15rem;
+  }
+
+  .envelope[open] .envelope-body {
+    animation: unfold 0.32s ease-out;
+  }
+
+  .envelope-action {
+    margin-left: auto;
+    flex-shrink: 0;
+    border: 1.5px solid var(--color-ink);
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    font-size: 0.875rem;
+    font-weight: 650;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .envelope[open] .envelope-action .when-closed,
+  .envelope:not([open]) .envelope-action .when-open {
+    display: none;
+  }
+
+  /* The answer, inked like a passport entry stamp. */
+  .stamp {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    padding: 0.55rem 1.2rem 0.6rem;
+    border: 3px double var(--color-air-red);
+    border-radius: 10px;
+    color: var(--color-air-red);
+    transform: rotate(-3deg);
+    font-family: var(--font-display);
+    text-align: center;
+  }
+
+  .envelope[open] .stamp {
+    animation: stamp-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.25);
+  }
+
+  .stamp-country {
+    font-size: clamp(1.7rem, 1.3rem + 2vw, 2.5rem);
+    font-weight: 760;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .stamp-meta {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  /* Postmark: the puzzle's number and date. */
+  .postmark {
+    display: grid;
+    place-items: center;
+    width: 5.6rem;
+    height: 5.6rem;
+    border: 2px solid var(--color-teal);
+    border-radius: 50%;
+    color: var(--color-teal);
+    text-align: center;
+    line-height: 1.05;
+    transform: rotate(8deg);
+    outline: 1px solid var(--color-teal);
+    outline-offset: 3px;
+  }
+
+  .postmark-number {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 700;
+  }
+
+  .postmark-date {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  /* Folded question in an FAQ. */
+  .fold > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.05rem 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .fold > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .fold > summary::after {
+    content: "+";
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--color-teal);
+  }
+
+  .fold[open] > summary::after {
+    content: "−";
+  }
+
+  /* Tables of answers and distances. */
+  .ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ledger th {
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1.5px solid var(--color-ink);
+  }
+
+  .ledger td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+  }
+
+  .ledger tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .num {
+    text-align: right !important;
+  }
+
+  /* Spoiler text that can be blurred until asked for. */
+  .veil {
+    filter: blur(6px);
+    transition: filter 0.2s ease;
+    user-select: none;
+  }
+
+  [data-veil="off"] .veil,
+  .veil-scope:has(.veil-toggle[aria-pressed="true"]) .veil {
+    filter: none;
+    user-select: auto;
+  }
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-3deg) scale(1.6);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Scrolling tables hold screen-reader-only text, which is absolutely positioned:
+   keep it inside the scroller so it can't widen the page. */
+.overflow-x-auto {
+  position: relative;
+}

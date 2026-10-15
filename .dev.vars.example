@@ -1,0 +1,3 @@
+# Copy to .dev.vars for local development. Never commit .dev.vars.
+# Enables POST /api/admin/sync (answered in worker/index.ts), used by: npm run sync:official -- --server http://localhost:5173
+ADMIN_TOKEN=replace-with-at-least-32-random-characters

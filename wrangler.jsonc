@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "originlegame",
+  "compatibility_date": "2026-10-10",
+  "compatibility_flags": ["nodejs_compat"],
+  // Custom entry: vinext's fetch handler plus the scheduled sync.
+  "main": "./worker/index.ts",
+  // Custom Domains originlegame.app and www.originlegame.app are managed in Cloudflare.
+  // Leave routes unset so local previews preserve incoming Host headers.
+  // Every five minutes in the two hours the reset can fall in (midnight in New York is
+  // 04:00 UTC in summer, 05:00 in winter), so a new guest is picked up within minutes;
+  // every half hour otherwise, to follow corrections the game makes.
+  "triggers": { "crons": ["*/5 4-5 * * *", "*/30 0-3,6-23 * * *"] },
+  "assets": {
+    "directory": "dist/client",
+    "not_found_handling": "none",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    // Canonical production origin. Any other host (workers.dev, localhost) is served noindex.
+    "SITE_URL": "https://originlegame.app",
+    // Rendered pages are kept in the edge cache (see src/lib/edge/page-cache.ts). "off" always renders.
+    "PAGE_CACHE": "on",
+    // Requests for the production host over plain HTTP are redirected to HTTPS. "off" serves them as they come.
+    "HTTPS_ONLY": "on",
+    // IndexNow key (public; also served as public/<key>.txt). Unset = changed pages are not announced.
+    "INDEXNOW_KEY": "9fc4131d2b1bfbf8db5f4500ab43cbb2"
+  },
+  // The deployed version's ID is part of every cache key, so a deploy starts with an empty cache.
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "originlegame",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "db/migrations"
+    }
+  ],
+  "observability": { "enabled": true }
+}

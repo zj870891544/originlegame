@@ -1,0 +1,58 @@
+{
+  "name": "originlegame",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@11.13.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build && node scripts/fix-server-chunks.mjs",
+    "preview": "wrangler dev --config dist/server/wrangler.json --persist-to .wrangler/state --var INDEXNOW_KEY:off",
+    "deploy": "vinext-cloudflare deploy --config dist/server/wrangler.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run build && npm run test:e2e",
+    "cf-typegen": "wrangler types",
+    "db:migrate:local": "wrangler d1 migrations apply originlegame --local",
+    "db:migrate:remote": "wrangler d1 migrations apply originlegame --remote",
+    "sync:official": "tsx scripts/sync-official.ts",
+    "assets:brand": "tsx scripts/render-brand-assets.ts",
+    "test:e2e": "playwright test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
+    "@vinext/cloudflare": "1.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-server-dom-webpack": "^19.3.1",
+    "vinext": "1.1.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.63.1",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitejs/plugin-rsc": "0.5.36",
+    "countries-list": "^3.4.1",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.71.2",
+    "vite": "^8.3.4",
+    "vitest": "^4.1.11",
+    "wrangler": "4.149.0"
+  }
+}
