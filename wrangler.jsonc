@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "originlegame",
+  "account_id": "850ebaba8351418d28b6f758d1c645ab",
   "compatibility_date": "2026-10-10",
   "compatibility_flags": ["nodejs_compat"],
   // Custom entry: vinext's fetch handler plus the scheduled sync.
@@ -32,7 +33,7 @@
     {
       "binding": "DB",
       "database_name": "originlegame",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "7529a1f6-433a-41d0-b8cd-f39caaae02fe",
       "migrations_dir": "db/migrations"
     }
   ],

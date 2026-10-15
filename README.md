@@ -46,6 +46,7 @@ npm run sync:official                 # fills the local database from originle.i
 |---|---|
 | `npm run dev` | Dev server in the Workers runtime |
 | `npm run build` | Production build into `dist/` (runs `scripts/fix-server-chunks.mjs` afterwards, see below) |
+| `npm run deploy` | Deploy the existing production build; run `check` or `build` first |
 | `npm run preview` | Serve the build with Wrangler on port 8787 (IndexNow off) |
 | `npm run typecheck` / `lint` / `test` | TypeScript, ESLint, Vitest |
 | `npm run test:e2e` | Playwright against the build (run `build` first) |
@@ -90,6 +91,9 @@ npm run sync:official                 # fills the local database from originle.i
 - **`scripts/fix-server-chunks.mjs`**: vinext 1.1 loads metadata routes (sitemap, robots) by dynamically importing
   the Worker entry, which then lands in `dist/server/_next/static/` and its relative imports of vinext's root-level
   manifests break ("No such module"). The post-build script repoints them and fails the build if one can't be found.
+
+The deploy command uses `--skip-build` so vinext deploys the build after the server-chunk fix. Its built-in
+rebuild would bypass that fix; always run `npm run check` or `npm run build` before deploying.
 
 ## Deploying to Cloudflare
 

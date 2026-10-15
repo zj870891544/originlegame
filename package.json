@@ -8,7 +8,7 @@
     "dev": "vite dev",
     "build": "vite build && node scripts/fix-server-chunks.mjs",
     "preview": "wrangler dev --config dist/server/wrangler.json --persist-to .wrangler/state --var INDEXNOW_KEY:off",
-    "deploy": "vinext-cloudflare deploy --config dist/server/wrangler.json",
+    "deploy": "vinext-cloudflare deploy --config dist/server/wrangler.json --skip-build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
