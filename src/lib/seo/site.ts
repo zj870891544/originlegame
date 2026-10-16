@@ -24,6 +24,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { href: "/hints", label: "Hints" },
   { href: "/archive", label: "Archive" },
   { href: "/how-to-play", label: "How to play" },
+  { href: "/originle-score-calculator", label: "Score calculator" },
   { href: "/games-like-originle", label: "Similar games" },
 ];
 
