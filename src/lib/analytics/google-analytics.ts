@@ -7,7 +7,9 @@ import { SITE } from "@/lib/seo/site";
  * advertising signals off. Events carry a fixed name and at most a hint level.
  */
 
-export const ANALYTICS_EVENTS = ["hint_open", "answer_reveal", "reveal_all", "official_link_click", "roadmap_open"] as const;
+export const ANALYTICS_EVENTS = [
+  "hint_open", "answer_reveal", "reveal_all", "official_link_click", "roadmap_open", "clue_progress", "score_calculate",
+] as const;
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[number];
 
 type AnalyticsWindow = Window & {

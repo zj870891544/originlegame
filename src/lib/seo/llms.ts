@@ -26,6 +26,8 @@ ${yesterday}
 - [Originle hints](${absoluteUrl("/hints")}): three hints of increasing strength, plus the clue titles
 - [Originle archive](${absoluteUrl("/archive")}): every past puzzle, each with its own page at /archive/<number>
 - [How to play Originle](${absoluteUrl("/how-to-play")}): rules, exact scoring tables, tips, FAQ
+- [Originle score calculator](${absoluteUrl("/originle-score-calculator")}): a score from the clues opened and wrong guesses, or from the game's share text; what each clue and miss costs
+- [Guess where someone is from game](${absoluteUrl("/guess-where-im-from-game")}): for people who saw the game but don't know its name; how it works and why the answer is about roots, not nationality
 - [Games like Originle](${absoluteUrl("/games-like-originle")}): similar daily geography games
 - [About and sources](${absoluteUrl("/about")}): where the data comes from
 

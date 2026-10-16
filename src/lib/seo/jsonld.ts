@@ -98,6 +98,23 @@ export function articleJsonLd(page: DatedPage): JsonLd {
   };
 }
 
+/** A free tool on this site, such as the score calculator. */
+export function webToolJsonLd(tool: { name: string; path: string; description: string }): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: tool.name,
+    url: absoluteUrl(tool.path),
+    description: tool.description,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    about: { "@type": "VideoGame", name: "Originle", url: SITE.officialGameUrl },
+    publisher: { "@id": `${SITE.origin}/#organization` },
+  };
+}
+
 export interface FaqEntry {
   question: string;
   /** Plain-text answer; must match what is visibly rendered on the page. */

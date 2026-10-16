@@ -52,6 +52,26 @@ const FAQ = [
       "Not always. Many guests are part of a diaspora, so the answer is the country they represent through their roots and culture. An American or Australian accent doesn't mean the answer is the US or Australia.",
   },
   {
+    question: "Is there an Originle app?",
+    answer:
+      "Originle is played in the web browser at originle.io, on a phone or a computer, with nothing to download and no account. Your progress is saved in the browser you play in.",
+  },
+  {
+    question: "What's the game where you guess where someone is from?",
+    answer:
+      "That's Originle: a real person talks about home in short videos and you guess the country they represent. It's often called a nationality game, but the answer is about roots and culture, not passports.",
+    body: (
+      <>
+        That&apos;s Originle: a real person talks about home in short videos and you guess the country they represent. It&apos;s often
+        called a nationality game, but the answer is about roots and culture, not passports.{" "}
+        <Link href="/guess-where-im-from-game" className="inline-link">
+          More on how it works
+        </Link>
+        .
+      </>
+    ),
+  },
+  {
     question: "Is this the official Originle site?",
     answer: `No. ${SITE.name} is an independent fan guide. The game itself is at originle.io, and every hint here is written by us from the day's published data.`,
   },
@@ -170,11 +190,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="shell mt-16 narrow" aria-labelledby="faq">
-        <h2 id="faq" className="heading">
-          Originle questions
-        </h2>
-        <div className="mt-6">
+      <section className="shell mt-16 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-10" aria-labelledby="faq">
+        <div>
+          <h2 id="faq" className="heading lg:sticky lg:top-24">
+            Originle questions
+          </h2>
+        </div>
+        <div>
           <Faq items={FAQ} />
         </div>
       </section>

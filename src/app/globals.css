@@ -410,6 +410,35 @@
     filter: none;
     user-select: auto;
   }
+
+  /* A row of choices, one pressed at a time: the calculator's and clue tracker's inputs. */
+  .segments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .segment {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1.5px solid var(--color-rule);
+    border-radius: 999px;
+    background: var(--color-card);
+    font-weight: 650;
+    line-height: 1.2;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .segment:hover {
+    border-color: var(--color-ink);
+  }
+
+  .segment[aria-pressed="true"] {
+    border-color: var(--color-teal);
+    background: var(--color-teal);
+    color: #fffaf1;
+  }
 }
 
 @keyframes unfold {

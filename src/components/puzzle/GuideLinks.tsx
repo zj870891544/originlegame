@@ -5,6 +5,7 @@ const GUIDES = [
   { href: "/hints", title: "Hints", text: "Three hints that narrow the map step by step, plus the clue titles." },
   { href: "/archive", title: "Archive", text: "Every past guest with their own page of hints and the answer." },
   { href: "/how-to-play", title: "How to play", text: "Rules, the exact scoring tables and the habits that save points." },
+  { href: "/originle-score-calculator", title: "Score calculator", text: "Your score from the clues and misses, or from your share result." },
   { href: "/games-like-originle", title: "Similar games", text: "More daily geography puzzles for after you've finished." },
 ];
 

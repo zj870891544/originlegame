@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { ArchiveTable } from "@/components/puzzle/ArchiveTable";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
+import { Faq } from "@/components/shared/Faq";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { SITE } from "@/lib/seo/site";
 import Link from "@/components/shared/Link";
 import { PageShell } from "@/components/shared/PageShell";
 import { safeRead } from "@/lib/db/client";
@@ -57,6 +59,30 @@ export default async function ArchivePage() {
         </section>
         <PlayOfficial number={number} campaign="archive" />
       </div>
+      <section className="mt-14 narrow" aria-labelledby="archive-faq">
+        <h2 id="archive-faq" className="heading">
+          Originle archive questions
+        </h2>
+        <div className="mt-6">
+          <Faq
+            items={[
+              {
+                question: "How do I replay old Originle puzzles?",
+                answer: `Open the official archive at ${SITE.officialArchiveUrl} and pick a day. Every past guest is playable there with three guesses, and your result is saved in your browser.`,
+              },
+              {
+                question: "How do I find the Originle answer for a past date?",
+                answer:
+                  "Find the date in the table above and tap the blurred answer, or open the puzzle's page for its hints first. Each page is named by its number, date and guest.",
+              },
+              {
+                question: "Are future Originle answers listed?",
+                answer: "No. The game only publishes a guest on their day, at midnight in New York, so this archive stops at today.",
+              },
+            ]}
+          />
+        </div>
+      </section>
       <JsonLd data={itemListJsonLd("Originle archive", puzzles.map((p) => ({ name: `Originle #${p.number}: ${p.guestName}`, path: `/archive/${p.number}` })))} />
     </PageShell>
   );

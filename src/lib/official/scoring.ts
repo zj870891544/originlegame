@@ -7,10 +7,12 @@
  *    then keeps 70% of that for each earlier miss.
  *  - A game with no correct guess scores up to 1,000 for its closest miss:
  *    1,000 × e^(−km / 1,500), border to border, rounded to tens.
- *  - The first two puzzles (Aya and Mila, 5 and 6 October 2026) keep the rules
- *    they were played under: 1,000 per clue (the last leaves 2,500) and 500 per miss.
+ *  - The first two puzzles (game ids "aya" and "mila", 5 and 6 October 2026; the
+ *    second guest's name is Emiliia) keep the rules they were played under:
+ *    1,000 per clue (the last leaves 2,500) and 500 per miss. A game with no
+ *    correct guess scores its closest miss on every puzzle, these two included.
  *
- * Checked against the game's own scoring script on 2026-10-15.
+ * Checked against the game's own scoring script on 2026-10-16.
  */
 
 export const MAX_SCORE = 10_000;

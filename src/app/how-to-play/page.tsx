@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LocalResetTime } from "@/components/puzzle/LocalResetTime";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
 import { Faq } from "@/components/shared/Faq";
 import { JsonLd } from "@/components/shared/JsonLd";
@@ -67,6 +68,52 @@ const FAQ = [
   {
     question: "When does a new Originle come out?",
     answer: "Every day at midnight in New York: 04:00 UTC in summer (EDT) and 05:00 UTC in winter (EST).",
+    body: (
+      <>
+        Every day at midnight in New York: 04:00 UTC in summer (EDT) and 05:00 UTC in winter (EST).
+        <LocalResetTime />
+      </>
+    ),
+  },
+  {
+    question: "Why was my Originle guess wrong?",
+    answer:
+      "Only the exact country counts, and it's the country the guest represents through their roots and culture, not necessarily where they live. An American or Australian accent doesn't mean the answer is the US or Australia. The game can also refuse a particular country as a guess for a guest, such as a passport country.",
+  },
+  {
+    question: "What does 0 km mean in Originle?",
+    answer:
+      "Your guess was wrong, but its border touches the answer's. Distances are measured border to border, so every neighbour is 0 km away, and if all three guesses miss, a 0 km guess still scores the full 1,000 close-miss points.",
+  },
+  {
+    question: "What do the flags on the Originle globe mean?",
+    answer:
+      "They're your own notes. Tapping a country on the globe flags it as a hunch and adds it to your shortlist; a flag is not a guess and costs nothing. When the last clue draws the outline, the game closes the globe until the round ends, but your notes and shortlist stay available.",
+  },
+  {
+    question: "What do the squares in an Originle result mean?",
+    answer:
+      "The Share button copies the puzzle number and score, then one square per guess: red for a miss, green for the right answer, and a white flag if you gave up. The last part, such as 3/8 clues, is how many clues were open at the end.",
+    body: (
+      <>
+        The Share button copies the puzzle number and score, then one square per guess: red for a miss, green for the right answer, and a
+        white flag if you gave up. The last part, such as 3/8 clues, is how many clues were open at the end. Paste it into the{" "}
+        <Link href="/originle-score-calculator" className="inline-link">
+          score calculator
+        </Link>{" "}
+        to see where your points went.
+      </>
+    ),
+  },
+  {
+    question: "What if a clip won't load or my progress disappears?",
+    answer:
+      "If a clip fails, the game shows a Try again button. Progress is saved in the browser you played in, so another device or a private window starts fresh, and the game warns you when the browser can't save. Bugs can be reported to the game at originle@krillion.io.",
+  },
+  {
+    question: "How can I be an Originle guest?",
+    answer:
+      "The game's Questions panel has a sign-up link for would-be guests. Originle says it pays $25 to each guest it selects.",
   },
   {
     question: "Can I play old Originle puzzles?",
@@ -203,9 +250,16 @@ export default function HowToPlayPage() {
                 </tbody>
               </table>
             </div>
+            <p className="mt-4">
+              Want your own number?{" "}
+              <Link href="/originle-score-calculator" className="inline-link">
+                The Originle score calculator
+              </Link>{" "}
+              works out any round, or reads the result the game&apos;s Share button copies.
+            </p>
             <p className="mt-4 text-[0.95rem] muted">
-              Puzzles #1 (Aya) and #2 (Mila) keep the rules they were first played under: 1,000 points per clue, 2,500 for the last, and 500
-              per miss. Figures checked against the game on October 15, 2026.
+              Puzzles #1 (Aya) and #2 (Emiliia) keep the rules they were first played under: 1,000 points per clue, 2,500 for the last, and
+              500 per miss. Close misses score the same way on every puzzle. Figures checked against the game on October 16, 2026.
             </p>
           </section>
 

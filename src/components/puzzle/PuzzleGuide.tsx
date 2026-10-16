@@ -1,6 +1,5 @@
 import Link from "@/components/shared/Link";
 import type { Puzzle } from "@/lib/db/puzzles";
-import { usesOriginalRules } from "@/lib/official/scoring";
 import {
   answerCountry,
   borderingCountries,
@@ -158,15 +157,12 @@ export function NearbyCountries({ puzzle, headingLevel = "h2" }: { puzzle: Puzzl
                     <span aria-hidden="true">{entry.country.flag}</span> {entry.country.name}
                   </td>
                   <td className="num">{formatKm(entry.km)}</td>
-                  <td className="num">{usesOriginalRules(puzzle.slug) ? "—" : entry.points.toLocaleString("en-US")}</td>
+                  <td className="num">{entry.points.toLocaleString("en-US")}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {usesOriginalRules(puzzle.slug) ? (
-          <p className="mt-3 text-sm muted">This early puzzle keeps its original one-guess rules, which didn&apos;t score close misses.</p>
-        ) : null}
       </Envelope>
     </section>
   );

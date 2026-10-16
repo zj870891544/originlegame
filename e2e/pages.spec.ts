@@ -48,9 +48,48 @@ test.describe("daily pages", () => {
     await expect(page.locator("tbody tr")).toHaveCount(3);
     await page.getByRole("link", { name: "Hints & answer" }).nth(1).click();
     await expect(page).toHaveURL(new RegExp(`/archive/${number - 1}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(`Originle #${number - 1} answer and hints`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(`Originle #${number - 1} answer and hints: Fixture ${number - 1}`);
     await page.getByText("Show the nearby countries").click();
     await expect(page.getByRole("cell", { name: /Rwanda/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: `Next: #${number}, Fixture ${number}` })).toBeVisible();
+  });
+
+  test("a puzzle page answers searches by date and guest name, folded", async ({ page, request }) => {
+    const html = (await (await request.get(`/archive/${number}`)).text()).replace(/<!-- -->/g, "");
+    expect(html).toContain(`Where is Fixture ${number} from in Originle?`);
+    expect(html).toContain(`Fixture ${number}, the guest of Originle #${number}, represents Kenya.`);
+    expect(html).toContain('"@type":"FAQPage"');
+    await page.goto(`/archive/${number}`);
+    const question = page.locator("details.fold", { hasText: `Where is Fixture ${number} from in Originle?` });
+    await expect(question).not.toHaveAttribute("open", "");
+  });
+
+  test("the clue tracker shows only the clues already watched, with the stakes", async ({ page }) => {
+    await page.goto("/hints");
+    const tracker = page.locator(".sheet", { has: page.getByRole("heading", { name: "Which clue are you on?" }) });
+    await expect(tracker.locator("ol li")).toHaveCount(1);
+    await expect(tracker.getByText("10,000")).toBeVisible();
+    // The fixture day has four clues, and the game prices clues by the day's count.
+    await tracker.getByRole("button", { name: "Clue 3" }).click();
+    await expect(tracker.locator("ol li")).toHaveCount(3);
+    await expect(tracker.getByText("6,500")).toBeVisible();
+    await expect(tracker.getByText("4,550")).toBeVisible();
+  });
+
+  test("the score calculator works out a round and reads share text", async ({ page }) => {
+    await page.goto("/originle-score-calculator");
+    const score = page.locator('[aria-live="polite"]').first();
+    await expect(score).toContainText("9,250");
+    await page.getByRole("group", { name: "Wrong guesses before the right one" }).getByRole("button", { name: "1" }).click();
+    await expect(score).toContainText("6,480");
+    await page.getByRole("button", { name: "Missed all three" }).click();
+    await expect(score).toContainText("0–1,000");
+    await page.getByLabel("Distance of your closest guess (km)").fill("1500");
+    await expect(score).toContainText("370");
+    await page.getByLabel(/Or paste the result/).fill("Originle #11 · 7,000\n🟥🟩 · 1/8 clues");
+    await page.getByRole("button", { name: "Read my result" }).click();
+    await expect(score).toContainText("7,000");
+    await expect(page.getByRole("status")).toContainText("solved on clue 1 after 1 miss");
   });
 
   test("future and unknown puzzles are 404s", async ({ request }) => {
@@ -70,6 +109,8 @@ test.describe("site files", () => {
     const xml = await (await request.get("/sitemap.xml")).text();
     expect(xml).toContain(`https://originlegame.app/archive/${number}`);
     expect(xml).toContain("https://originlegame.app/how-to-play");
+    expect(xml).toContain("https://originlegame.app/originle-score-calculator");
+    expect(xml).toContain("https://originlegame.app/guess-where-im-from-game");
   });
 
   test("previews are closed to crawlers", async ({ request }) => {

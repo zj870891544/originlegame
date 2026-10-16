@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import { Awaiting } from "@/components/puzzle/Awaiting";
+import { ClueTracker } from "@/components/puzzle/ClueTracker";
 import { Postmark } from "@/components/puzzle/Postmark";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
 import { AnswerEnvelope, ClueRoadmap, HintEnvelopes } from "@/components/puzzle/PuzzleGuide";
 import { RevealAll } from "@/components/puzzle/RevealAll";
 import { SourceNote } from "@/components/puzzle/SourceNote";
+import { Faq } from "@/components/shared/Faq";
 import { JsonLd } from "@/components/shared/JsonLd";
 import Link from "@/components/shared/Link";
 import { PageShell } from "@/components/shared/PageShell";
-import { solvedPoints } from "@/lib/official/scoring";
+import { rulesForPuzzle } from "@/lib/official/calculator";
+import { CLUES, cluePoints, solvedPoints } from "@/lib/official/scoring";
 import { getToday } from "@/lib/puzzle/request";
+import { clueRoadmap } from "@/lib/puzzle/view";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { formatLongDate } from "@/lib/time/game-day";
@@ -21,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata({
     title: `Originle Hints Today #${number}: Spoiler-Free Clues`,
     description: puzzle
-      ? `Three Originle hints for #${number} (${formatLongDate(today)}): the continent, then the region and languages, then the spelling and neighbours. Where is ${puzzle.guestName} from?`
+      ? `Today's Originle hints for #${number} (${formatLongDate(today)}), no spoilers: the continent, the region and languages, then the spelling. Track which clue you're on. Where is ${puzzle.guestName} from?`
       : `Spoiler-free Originle hints for #${number} (${formatLongDate(today)}) appear here soon after midnight Eastern.`,
     path: "/hints",
     ogType: "article",
@@ -52,6 +56,28 @@ const CLUE_READING = [
   },
 ];
 
+const fmt = (n: number) => n.toLocaleString("en-US");
+
+const FAQ = [
+  {
+    question: "Are these Originle hints spoiler-free?",
+    answer:
+      "Yes. Each hint is folded away until you open it, and the answer sits in its own envelope at the bottom. Hint 1 is the gentlest, with the continent; hint 3 is the strongest, with the first letter.",
+  },
+  {
+    question: "How many clues does Originle give?",
+    answer: `Eight short videos per guest. The first is free; a right answer on clue 1 is worth ${fmt(cluePoints(1))}, and each later clue costs a little more than the one before.`,
+  },
+  {
+    question: "What is the final clue in Originle?",
+    answer: `Clue ${CLUES} shows where the country sits and its outline. A right answer on it is worth ${fmt(cluePoints(CLUES))} at most, so it's a safety net rather than a plan.`,
+  },
+  {
+    question: "Should I open a hint or the next clue?",
+    answer: `Our hints are free; the game's clues aren't. Open the next hint here first, and keep your guesses for when one country clearly fits: a wrong guess costs 30% of what a right answer is worth, which is more than the next clue until clue 7.`,
+  },
+];
+
 export default async function HintsPage() {
   const { number, puzzle, today, ok } = await getToday();
   return (
@@ -78,6 +104,9 @@ export default async function HintsPage() {
                 </div>
               </div>
               <div className="mt-3"><ClueRoadmap puzzle={puzzle} /></div>
+              <div className="mt-8">
+                <ClueTracker clues={clueRoadmap(puzzle)} rules={rulesForPuzzle(puzzle.number)} />
+              </div>
               <h2 className="heading mt-12">Still stuck?</h2>
               <p className="mt-3 max-w-[62ch] muted">
                 The answer is below. You can also read the{" "}
@@ -122,6 +151,15 @@ export default async function HintsPage() {
               ))}
             </dl>
           </section>
+
+          <section aria-labelledby="hints-faq">
+            <h2 id="hints-faq" className="heading">
+              Originle hints: questions
+            </h2>
+            <div className="mt-6">
+              <Faq items={FAQ} />
+            </div>
+          </section>
         </div>
         <aside className="min-w-0 space-y-10">
           <PlayOfficial number={number} campaign="hints" />
@@ -136,8 +174,8 @@ export default async function HintsPage() {
               than a miss.
             </p>
             <p className="mt-3 text-[0.98rem]">
-              <Link href="/how-to-play#scoring" className="inline-link">
-                See every score in the scoring tables
+              <Link href="/originle-score-calculator" className="inline-link">
+                Work out any score with the calculator
               </Link>
             </p>
           </section>

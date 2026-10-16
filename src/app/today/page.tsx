@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Awaiting } from "@/components/puzzle/Awaiting";
 import { GuideLinks } from "@/components/puzzle/GuideLinks";
+import { LocalResetTime } from "@/components/puzzle/LocalResetTime";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
 import { AnswerEnvelope, NearbyCountries, PuzzleCard } from "@/components/puzzle/PuzzleGuide";
 import { SourceNote } from "@/components/puzzle/SourceNote";
@@ -21,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata({
     title: `Originle Answer Today #${number} (${formatLongDate(today)})`,
     description: puzzle
-      ? `Where is ${puzzle.guestName} from? The Originle #${number} answer for ${formatLongDate(today)}, behind three spoiler-free hints, with the close misses and their scores.`
+      ? `Where is ${puzzle.guestName} from? Today's Originle answer and solution for #${number} (${formatLongDate(today)}), behind three spoiler-free hints, plus yesterday's answer and the close misses.`
       : `The Originle #${number} answer for ${formatLongDate(today)} appears here soon after midnight Eastern, behind three spoiler-free hints.`,
     path: "/today",
     ogType: "article",
@@ -46,6 +47,20 @@ export default async function TodayPage() {
     {
       question: "Is the answer the same for everyone?",
       answer: "Yes. Every player meets the same guest on the same day in New York time, wherever they live.",
+    },
+    ...(yesterday
+      ? [{ question: "What was yesterday's Originle answer?", answer: puzzleAnswerSummary(yesterday) }]
+      : []),
+    {
+      question: "What time does the next Originle come out?",
+      answer: "At midnight in New York: 04:00 UTC while daylight saving time is on (EDT), 05:00 UTC in winter (EST). This page switches to the new guest within minutes.",
+      body: (
+        <>
+          At midnight in New York: 04:00 UTC while daylight saving time is on (EDT), 05:00 UTC in winter (EST). This page switches to the
+          new guest within minutes.
+          <LocalResetTime />
+        </>
+      ),
     },
   ];
   return (

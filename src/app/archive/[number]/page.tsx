@@ -3,10 +3,14 @@ import { notFound } from "next/navigation";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
 import { NearbyCountries, PuzzleCard } from "@/components/puzzle/PuzzleGuide";
 import { SourceNote } from "@/components/puzzle/SourceNote";
+import { Faq } from "@/components/shared/Faq";
 import { JsonLd } from "@/components/shared/JsonLd";
 import Link from "@/components/shared/Link";
 import { PageShell } from "@/components/shared/PageShell";
+import { countryInSentence } from "@/lib/countries";
+import { rulesForPuzzle } from "@/lib/official/calculator";
 import { getPuzzleByNumber, getToday } from "@/lib/puzzle/request";
+import { answerCountry } from "@/lib/puzzle/view";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { puzzleAnswerSummary } from "@/lib/seo/puzzle";
@@ -31,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const date = formatLongDate(puzzle.gameDate);
   return pageMetadata({
     title: `Originle #${puzzle.number} Answer & Hints: ${puzzle.guestName} (${date})`,
-    description: `Originle #${puzzle.number} from ${date}: where is ${puzzle.guestName} from? Three hints, the game's clue titles, the answer, and the nearest countries with their close-miss scores.`,
+    description: `The Originle answer for ${date} (#${puzzle.number}): where is ${puzzle.guestName} from? Three spoiler-free hints, the game's clue titles, the answer, and the close misses with their scores.`,
     path: `/archive/${puzzle.number}`,
     ogType: "article",
     published: puzzle.firstSeenAt,
@@ -45,12 +49,32 @@ export default async function PuzzlePage({ params }: Props) {
   const { number: todayNumber } = await getToday();
   const isToday = puzzle.number === todayNumber;
   const date = formatLongDate(puzzle.gameDate);
+  const [previous, next] = await Promise.all([
+    puzzle.number > 1 ? getPuzzleByNumber(puzzle.number - 1) : null,
+    puzzle.number < todayNumber ? getPuzzleByNumber(puzzle.number + 1) : null,
+  ]);
+  const country = answerCountry(puzzle);
+  const faq = [
+    { question: `What was the Originle answer on ${date}?`, answer: puzzleAnswerSummary(puzzle) },
+    {
+      question: `Where is ${puzzle.guestName} from in Originle?`,
+      answer: `${puzzle.guestName}, the guest of Originle #${puzzle.number}, represents ${countryInSentence(country)}. The answer is the country a guest represents through their roots and culture, which isn't always where they live.`,
+    },
+    {
+      question: `Can I still play Originle #${puzzle.number}?`,
+      answer: `Yes. Every past guest stays playable in the official archive at originle.io, with three guesses${
+        rulesForPuzzle(puzzle.number) === "original"
+          ? " and the original scoring this puzzle was first played under: 1,000 points per clue (2,500 for the last) and 500 per miss."
+          : " and the same scoring as today's puzzle."
+      }`,
+    },
+  ];
   return (
     <PageShell
       path={`/archive/${puzzle.number}`}
       crumbName={`#${puzzle.number}`}
       parents={[{ name: "Archive", path: "/archive" }]}
-      title={`Originle #${puzzle.number} answer and hints`}
+      title={`Originle #${puzzle.number} answer and hints: ${puzzle.guestName}`}
       lead={
         <>
           {formatWeekday(puzzle.gameDate)}, {date}. The guest is {puzzle.guestName}.{" "}
@@ -79,17 +103,26 @@ export default async function PuzzlePage({ params }: Props) {
           <PuzzleCard puzzle={puzzle} showNearbyLink={false} />
           <NearbyCountries puzzle={puzzle} />
           <SourceNote puzzle={puzzle} />
+          <section aria-labelledby="puzzle-faq">
+            <h2 id="puzzle-faq" className="heading">
+              Originle #{puzzle.number} questions
+            </h2>
+            <p className="mt-3 max-w-[66ch] muted">These name the answer, so they stay folded too.</p>
+            <div className="mt-5">
+              <Faq items={faq} />
+            </div>
+          </section>
           <nav aria-label="Other puzzles" className="flex flex-wrap justify-between gap-4 border-t border-rule pt-6">
-            {puzzle.number > 1 ? (
-              <Link href={`/archive/${puzzle.number - 1}`} className="inline-link">
-                Previous: #{puzzle.number - 1}
+            {previous ? (
+              <Link href={`/archive/${previous.number}`} className="inline-link">
+                Previous: #{previous.number}, {previous.guestName}
               </Link>
             ) : (
               <span />
             )}
-            {puzzle.number < todayNumber ? (
-              <Link href={`/archive/${puzzle.number + 1}`} className="inline-link">
-                Next: #{puzzle.number + 1}
+            {next ? (
+              <Link href={`/archive/${next.number}`} className="inline-link">
+                Next: #{next.number}, {next.guestName}
               </Link>
             ) : (
               <Link href="/archive" className="inline-link">

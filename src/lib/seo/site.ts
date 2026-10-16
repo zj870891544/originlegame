@@ -41,6 +41,8 @@ export const FOOTER_NAV: { heading: string; items: NavItem[] }[] = [
     items: [
       { href: "/", label: "The Originle game" },
       { href: "/how-to-play", label: "How to play Originle" },
+      { href: "/originle-score-calculator", label: "Originle score calculator" },
+      { href: "/guess-where-im-from-game", label: "Guess where someone is from" },
       { href: "/games-like-originle", label: "Games like Originle" },
     ],
   },

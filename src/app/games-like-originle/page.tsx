@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = pageMetadata({
   title: "Games Like Originle: 10 Daily Geography Puzzles",
   description:
-    "Finished today's Originle? Ten more free daily geography games: Worldle, Globle, Travle, Flagle, Tradle, Countryle, Satle, Capitalle, GeoGuessr and more.",
+    "Finished today's Originle? Ten more free daily geography games, from Worldle and Globle to GeoGuessr, and how Originle compares with Worldle and GeoGuessr.",
   path: "/games-like-originle",
 });
 
@@ -31,6 +31,27 @@ const GAMES: Game[] = [
   { name: "Satle", url: "https://satle.ca/", group: "map", guess: "A city from satellite images that zoom out with each wrong answer.", why: "Landscape reading, like Originle's land and weather clues, from above." },
   { name: "GeoGuessr", url: "https://www.geoguessr.com/", group: "map", guess: "Your location from Street View, by dropping a pin.", why: "The classic for reading signs, roads and languages. The free tier is limited." },
   { name: "Krillion", url: "https://krillion.io/", group: "more", guess: "Seven trivia prompts a day, scored by how rare your answer is.", why: "Another daily game from the same creator. Answers and hints are on our sister site, Krillion Today." },
+];
+
+const VERSUS = [
+  {
+    id: "vs-worldle",
+    title: "Originle vs Worldle",
+    points: [
+      "Both end in one mystery country a day, and both tell you how far a wrong guess was.",
+      "Worldle starts from the country's silhouette and gives six guesses with a direction arrow. Originle starts from a person and gives three, and only shows the outline as its last clue.",
+      "Worldle is a map puzzle; Originle is a listening puzzle, where language, food and stories do the work.",
+    ],
+  },
+  {
+    id: "vs-geoguessr",
+    title: "Originle vs GeoGuessr",
+    points: [
+      "Both reward reading small details: signs and roads in GeoGuessr, words and traditions in Originle.",
+      "GeoGuessr drops you into Street View and scores how close your pin lands. Originle asks for a country, and only scores closeness when all three guesses miss.",
+      "Originle is free with one guest a day; GeoGuessr's free tier is limited.",
+    ],
+  },
 ];
 
 const GROUPS: { key: Game["group"]; title: string; text: string }[] = [
@@ -79,6 +100,25 @@ export default function GamesLikeOriginlePage() {
             </ul>
           </section>
         ))}
+        <section aria-labelledby="versus">
+          <h2 id="versus" className="heading">
+            How Originle compares
+          </h2>
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
+            {VERSUS.map((match) => (
+              <div key={match.id} className="sheet p-5">
+                <h3 id={match.id} className="subheading">
+                  {match.title}
+                </h3>
+                <ul className="mt-3 list-disc space-y-1.5 pl-5 muted">
+                  {match.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
         <section aria-labelledby="pick" className="prose-block narrow">
           <h2 id="pick" className="heading">
             Which one to play next
@@ -89,7 +129,11 @@ export default function GamesLikeOriginlePage() {
             then try Travle for borders.
           </p>
           <p>
-            New to Originle itself? Read{" "}
+            Saw a game where people guess someone&apos;s country from a video? That&apos;s{" "}
+            <Link href="/guess-where-im-from-game" className="inline-link">
+              Originle
+            </Link>
+            . New to it? Read{" "}
             <Link href="/how-to-play" className="inline-link">
               how to play
             </Link>{" "}

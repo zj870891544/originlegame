@@ -12,10 +12,12 @@ Not affiliated with or endorsed by Originle. Built the same way as krilliontoday
 |---|---|---|
 | `/` | The game, today's guest card (hints, clue titles, answer), how it works, guide links, recent answers, FAQ | originle game |
 | `/today` | Today's answer, close misses with scores, yesterday's answer | originle answer today |
-| `/hints` | Three hints that get stronger, the clue titles, how to read each kind of clue | originle hints |
+| `/hints` | Three hints that get stronger, the clue titles, a "which clue are you on" tracker, how to read each kind of clue | originle hints |
 | `/archive` | Every puzzle, answers blurred until tapped | originle archive |
-| `/archive/<n>` | One puzzle: hints, clue titles, answer, close misses, previous/next | originle #n answer |
+| `/archive/<n>` | One puzzle: hints, clue titles, answer, close misses, folded FAQ by date and guest, previous/next | originle #n answer, originle <date> answer |
 | `/how-to-play` | Rule card, first round, scoring tables, overlooked rules, tips, comparison table, FAQ | how to play originle |
+| `/originle-score-calculator` | Interactive score calculator (round or pasted share text), clue and miss costs, scoring FAQ | originle score calculator |
+| `/guess-where-im-from-game` | For people who saw the game but don't know its name: what Originle is, roots vs nationality | guess where someone is from game |
 | `/games-like-originle` | Ten similar daily games | games like originle |
 | `/about`, `/privacy`, `/terms` | Sources and editorial notes, privacy, terms | |
 

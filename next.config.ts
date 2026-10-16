@@ -18,6 +18,12 @@ const PERMANENT_REDIRECTS: [from: string, to: string][] = [
   ["/rules", "/how-to-play"],
   ["/how-to-play-originle", "/how-to-play"],
   ["/similar-games", "/games-like-originle"],
+  ["/score-calculator", "/originle-score-calculator"],
+  ["/originle-calculator", "/originle-score-calculator"],
+  ["/calculator", "/originle-score-calculator"],
+  ["/guess-where-im-from", "/guess-where-im-from-game"],
+  ["/guess-where-someone-is-from", "/guess-where-im-from-game"],
+  ["/guess-nationality-game", "/guess-where-im-from-game"],
   ["/contact", "/about"],
 ];
 
