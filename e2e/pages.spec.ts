@@ -7,6 +7,9 @@ test.describe("daily pages", () => {
   test("home shows today's guest with the answer folded away", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Originle game");
+    await expect(page.getByRole("link", { name: "Play at originle.io", exact: true })).toHaveAttribute(
+      "href", "https://originle.io/?utm_source=originlegame.app&utm_medium=referral&utm_campaign=home_hero",
+    );
     await expect(page.getByRole("heading", { name: `Where is Fixture ${number} from?` })).toBeVisible();
     const answer = page.locator("details", { hasText: `Originle #${number} answer` });
     await expect(answer).not.toHaveAttribute("open", "");
@@ -23,6 +26,7 @@ test.describe("daily pages", () => {
     expect(html).toContain("is Kenya. The guest is Fixture");
     expect(html).toContain(`href="/archive/${number}"`);
     expect(html).toContain(`"citation":"https://originle.io/fixture-${number}/day.js"`);
+    expect(html).toContain(`href="https://originle.io/fixture-${number}/day.js"`);
     expect(html).toContain('"@type":"Article"');
     expect(html).toContain('<link rel="canonical" href="https://originlegame.app/today"');
   });
@@ -46,6 +50,7 @@ test.describe("daily pages", () => {
   test("archive lists every stored puzzle and links to its page", async ({ page }) => {
     await page.goto("/archive");
     await expect(page.locator("tbody tr")).toHaveCount(3);
+    await expect(page.getByRole("link", { name: `Fixture ${number}: Originle #${number}`, exact: true })).toHaveAttribute("href", `/archive/${number}`);
     await page.getByRole("link", { name: "Hints & answer" }).nth(1).click();
     await expect(page).toHaveURL(new RegExp(`/archive/${number - 1}$`));
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(`Originle #${number - 1} answer and hints: Fixture ${number - 1}`);

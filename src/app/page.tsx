@@ -17,8 +17,8 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata({
-    title: "Originle Game: Daily Country Guessing Guide",
-    description: "Learn how the Originle daily country guessing game works. Find spoiler-free hints, today's answer, exact scoring rules and an archive of past guests.",
+    title: "Originle Game Guide: Today's Hints, Answers & Archive",
+    description: "An independent guide to Originle at originle.io, the daily country guessing game. Get today's hints and answer, replay past guests and understand the scoring.",
     path: "/",
   });
 }
@@ -100,6 +100,9 @@ export default async function HomePage() {
             <Link href="/archive" className="btn btn-ghost">
               Past answers
             </Link>
+            <a href={officialUrl("/", "home_hero")} className="btn btn-ghost" rel="noopener" data-ga-event="official_link_click">
+              Play at originle.io
+            </a>
           </div>
           {yesterday ? (
             <p className="mt-6 text-[0.97rem] muted">

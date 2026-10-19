@@ -40,25 +40,50 @@ describe("dated answer SEO", () => {
 });
 
 describe("sitemap content dates", () => {
-  const entry = (puzzles: PuzzleSummary[], path: string) =>
-    buildSitemap(puzzles, "2026-10-15").find((page) => page.url === `https://originlegame.app${path}`);
+  const entry = (puzzles: PuzzleSummary[], path: string, today = "2026-10-19") =>
+    buildSitemap(puzzles, today).find((page) => page.url === `https://originlegame.app${path}`);
 
-  it("preserves the archive's actual change date after midnight", () => {
-    expect(entry([summary], "/archive")?.lastModified).toBe(summary.updatedAt);
+  it("preserves a dated puzzle's actual change date after midnight", () => {
     expect(entry([summary], "/archive/10")?.lastModified).toBe(summary.updatedAt);
     expect(entry([summary], "/today")).not.toHaveProperty("lastModified");
+    expect(entry([summary], "/hints")).not.toHaveProperty("lastModified");
   });
 
   it("does not give today's answer a historical correction's newer timestamp", () => {
-    const today = { ...summary, number: 11, gameDate: "2026-10-15", updatedAt: "2026-10-15T04:01:00.000Z" };
-    const correction = { ...summary, updatedAt: "2026-10-15T09:00:00.000Z" };
+    const today = { ...summary, number: 15, gameDate: "2026-10-19", updatedAt: "2026-10-19T04:01:00.000Z" };
+    const correction = { ...summary, updatedAt: "2026-10-19T09:00:00.000Z" };
     expect(entry([today, correction], "/today")?.lastModified).toBe(today.updatedAt);
     expect(entry([today, correction], "/hints")?.lastModified).toBe(today.updatedAt);
     expect(entry([today, correction], "/archive")?.lastModified).toBe(correction.updatedAt);
   });
 
-  it("omits unknown change dates when the database is unavailable", () => {
-    expect(entry([], "/")).not.toHaveProperty("lastModified");
-    expect(entry([], "/archive")).not.toHaveProperty("lastModified");
+  it("keeps known editorial dates when the database is unavailable, without inventing daily dates", () => {
+    for (const path of ["/", "/archive", "/how-to-play", "/guess-where-im-from-game"]) {
+      expect(entry([], path)?.lastModified).toBe("2026-10-19");
+    }
+    expect(entry([], "/originle-score-calculator")?.lastModified).toBe("2026-10-16");
+    expect(entry([], "/games-like-originle")?.lastModified).toBe("2026-10-16");
+    expect(entry([], "/about")?.lastModified).toBe("2026-10-15");
+    expect(entry([], "/today")).not.toHaveProperty("lastModified");
+    expect(entry([], "/hints")).not.toHaveProperty("lastModified");
+  });
+
+  it("does not advance editorial or record dates just because the day changes", () => {
+    for (const path of ["/", "/archive", "/how-to-play", "/guess-where-im-from-game", "/archive/10"]) {
+      expect(entry([summary], path, "2026-10-20")?.lastModified).toBe(entry([summary], path)?.lastModified);
+    }
+  });
+
+  it("advertises listing edits even when their puzzle records are older", () => {
+    for (const path of ["/", "/archive"]) {
+      expect(entry([summary], path)?.lastModified).toBe("2026-10-19");
+    }
+  });
+
+  it("uses newer puzzle changes over the listing pages' editorial dates", () => {
+    const newer = { ...summary, number: 16, gameDate: "2026-10-20", updatedAt: "2026-10-20T04:01:00.000Z" };
+    for (const path of ["/", "/archive"]) {
+      expect(entry([newer, summary], path, "2026-10-20")?.lastModified).toBe(newer.updatedAt);
+    }
   });
 });

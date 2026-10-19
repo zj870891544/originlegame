@@ -36,7 +36,7 @@ const EASY_TO_MISS = [
   "Clues get dearer as you go: the second costs 250 points, the last one 1,750. The early ones are the cheap ones.",
   "A wrong guess costs 30% of whatever a right answer was worth at that point, so a miss on clue 1 costs 3,000, more than the next four clues together.",
   "Missing all three guesses, or giving up, still scores up to 1,000 for your closest guess.",
-  "Neighbours that share a border with the answer count as 0 km away for that close-miss score.",
+  "A 0 km miss on the game's distance table earns the full 1,000 close-miss points if no guess is correct.",
   "The game can refuse a guess for a particular guest, such as the passport country of someone representing their family's homeland.",
   "Puzzles #1 and #2 keep the original rules when you replay them in the archive.",
 ];
@@ -46,7 +46,7 @@ const TIPS = [
   { title: "Think region before country", text: "A dish or a festival usually belongs to several neighbours. Pin down the region, then look for the clue that splits it." },
   { title: "Don't trust the accent", text: "Many guests grew up abroad. The answer is the country they represent, so weigh culture and language over how they sound in English." },
   { title: "Buy a clue instead of a coin flip", text: "Torn between two countries? The next clue costs at most 1,750; a wrong guess costs 30% of everything." },
-  { title: "Read the distance", text: "Under 500 km means you're next door: stay in the region. Thousands of kilometres means a different part of the world." },
+  { title: "Read the distance", text: "Under 500 km suggests looking nearby, but does not mean the countries share a border. Thousands of kilometres points to a wider search." },
   { title: "Save a guess for the outline", text: "The last clue shows the country's shape. On hard days, keep one guess in hand for it." },
 ];
 
@@ -83,7 +83,7 @@ const FAQ = [
   {
     question: "What does 0 km mean in Originle?",
     answer:
-      "Your guess was wrong, but its border touches the answer's. Distances are measured border to border, so every neighbour is 0 km away, and if all three guesses miss, a 0 km guess still scores the full 1,000 close-miss points.",
+      "The game records 0 km between your guess and the answer in its border-to-border distance table. It still counts as a wrong guess: only the exact country is correct. If all three guesses miss, a 0 km closest guess earns the full 1,000 close-miss points.",
   },
   {
     question: "What do the flags on the Originle globe mean?",

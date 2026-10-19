@@ -36,7 +36,11 @@ export function ArchiveTable({ puzzles, today, caption }: { puzzles: PuzzleSumma
                     {formatLongDate(puzzle.gameDate)}
                     <span className="block text-sm muted">{puzzle.gameDate === today ? "Today" : formatWeekday(puzzle.gameDate)}</span>
                   </td>
-                  <td>{puzzle.guestName}</td>
+                  <td>
+                    <Link href={`/archive/${puzzle.number}`} className="inline-link">
+                      {puzzle.guestName}: Originle #{puzzle.number}
+                    </Link>
+                  </td>
                   <td>
                     <button type="button" className="veil text-left" data-veil-cell aria-label={`Answer for #${puzzle.number}, blurred. Activate to show.`}>
                       {country ? `${country.flag} ${country.name}` : puzzle.countryCode}

@@ -76,6 +76,20 @@ export default async function ArchivePage() {
                   "Find the date in the table above and tap the blurred answer, or open the puzzle's page for its hints first. Each page is named by its number, date and guest.",
               },
               {
+                question: "Can I play Originle unlimited or in infinite mode?",
+                answer:
+                  "Originle releases one new guest each day. To play more than one round, use the official archive to replay guests from earlier days. Each released guest has its own hints and answer in the table above.",
+                body: (
+                  <>
+                    Originle releases one new guest each day. To play more than one round, use the{" "}
+                    <a href={SITE.officialArchiveUrl} className="inline-link" target="_blank" rel="noopener" data-ga-event="official_link_click">
+                      official Originle archive
+                    </a>{" "}
+                    to replay guests from earlier days. Each released guest has its own hints and answer in the table above.
+                  </>
+                ),
+              },
+              {
                 question: "Are future Originle answers listed?",
                 answer: "No. The game only publishes a guest on their day, at midnight in New York, so this archive stops at today.",
               },

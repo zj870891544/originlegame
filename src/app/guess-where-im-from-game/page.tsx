@@ -80,6 +80,13 @@ export default function GuessWhereImFromPage() {
         </>
       }
     >
+      <nav aria-label="Start with Originle" className="mb-10 flex flex-wrap gap-3">
+        <a href={officialUrl("/", "guess_where_from_intro")} className="btn btn-primary" target="_blank" rel="noopener" data-ga-event="official_link_click">
+          Play at originle.io
+        </a>
+        <Link href="/hints" className="btn btn-ghost">Today&apos;s Originle hints</Link>
+        <Link href="/archive" className="btn btn-ghost">Browse past guests</Link>
+      </nav>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="min-w-0 space-y-16">
           <section aria-labelledby="signs">
@@ -110,7 +117,7 @@ export default function GuessWhereImFromPage() {
                 and watch today&apos;s guest introduce themself.
               </li>
               <li>Guess a country when one fits, or reveal the next clue. Each clue makes it easier and lowers the points on offer.</li>
-              <li>After a wrong guess, read the distance. Under 500 km means you&apos;re next door.</li>
+              <li>After a wrong guess, read the distance. Under 500 km suggests looking nearby, but does not mean the countries share a border.</li>
               <li>The round ends on a right answer, a third miss, or giving up. Then the guest tells you where they&apos;re from.</li>
             </ol>
             <p>
