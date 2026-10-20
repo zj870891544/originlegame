@@ -29,6 +29,9 @@ test.describe("daily pages", () => {
     expect(html).toContain(`href="https://originle.io/fixture-${number}/day.js"`);
     expect(html).toContain('"@type":"Article"');
     expect(html).toContain('<link rel="canonical" href="https://originlegame.app/today"');
+    expect(html).toContain("0 km in Originle");
+    expect(html).not.toContain("sharing a border:");
+    expect(html).not.toContain("It borders ");
   });
 
   test("opening every hint leaves the answer and clue titles folded", async ({ page }) => {
@@ -67,6 +70,18 @@ test.describe("daily pages", () => {
     await page.goto(`/archive/${number}`);
     const question = page.locator("details.fold", { hasText: `Where is Fixture ${number} from in Originle?` });
     await expect(question).not.toHaveAttribute("open", "");
+    const explanation = page.locator("details.envelope", { hasText: `Originle #${number}: answer context` });
+    await expect(explanation).not.toHaveAttribute("open", "");
+    await expect(explanation.getByRole("heading", { name: "What confirms the answer" })).toBeHidden();
+    await explanation.locator("summary").click();
+    await expect(explanation.getByRole("heading", { name: "What confirms the answer" })).toBeVisible();
+    await expect(explanation).toContainText("is Kenya. The guest is Fixture");
+    await expect(explanation).toContainText("Language alone does not uniquely identify a country");
+    const source = page.getByRole("region", { name: "Sources and record times" });
+    await expect(source.locator("time")).toHaveCount(3);
+    await expect(source.getByRole("link", { name: "published day.js data" })).toHaveAttribute("href", `https://originle.io/fixture-${number}/day.js`);
+    const modified = await source.locator("time").nth(2).getAttribute("datetime");
+    expect(html).toContain(`"dateModified":"${modified}"`);
   });
 
   test("the clue tracker shows only the clues already watched, with the stakes", async ({ page }) => {
@@ -115,6 +130,7 @@ test.describe("site files", () => {
     expect(xml).toContain(`https://originlegame.app/archive/${number}`);
     expect(xml).toContain("https://originlegame.app/how-to-play");
     expect(xml).toContain("https://originlegame.app/originle-score-calculator");
+    expect(xml).toContain("https://originlegame.app/originle-solver");
     expect(xml).toContain("https://originlegame.app/guess-where-im-from-game");
   });
 

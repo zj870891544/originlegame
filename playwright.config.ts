@@ -17,7 +17,7 @@ export default defineConfig({
   use: { baseURL: E2E_ORIGIN, trace: "retain-on-failure" },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
-    { name: "phone", use: { ...devices["iPhone SE"], defaultBrowserType: "chromium" }, testMatch: /layout\.spec\.ts/ },
+    { name: "phone", use: { ...devices["iPhone SE"], defaultBrowserType: "chromium" }, testMatch: /(?:layout|solver)\.spec\.ts/ },
   ],
   webServer: {
     command: `npx tsx e2e/prepare-db.ts && npx wrangler dev --config dist/server/wrangler.json --port ${PORT} --persist-to .wrangler/e2e-state --var PAGE_CACHE:off --var HTTPS_ONLY:off --var INDEXNOW_KEY:off`,

@@ -87,8 +87,10 @@ export default async function HomePage() {
           <p className="font-semibold text-teal">{formatLongDate(today)}</p>
           <h1 className="display mt-3 max-w-[13ch]">Originle game: meet a guest, guess their country</h1>
           <p className="mt-5 max-w-[46ch] text-lg leading-relaxed muted md:text-xl">
-            Originle is the daily game where you meet one person and guess the country they come from. Stuck on today&apos;s guest? Open a
-            hint, then another. The answer waits until you ask.
+            {SITE.identityDescription}
+          </p>
+          <p className="mt-3 max-w-[46ch] muted">
+            Open spoiler-free hints, check a sourced daily answer, or find a past guest. The answer stays folded until you ask.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link href="/hints" className="btn btn-primary">

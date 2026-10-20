@@ -12,16 +12,16 @@ export const metadata: Metadata = pageMetadata({
 
 export default function AboutPage() {
   return (
-    <PageShell path="/about" crumbName="About" title="About this site" lead={`${SITE.name} is an independent fan guide to Originle. ${SITE.disclaimer}`}>
+    <PageShell path="/about" crumbName="About" title="About this site" lead={SITE.identityDescription}>
       <div className="prose-block narrow">
         <h2 className="heading">What it&apos;s for</h2>
         <p>
-          Originle is a lovely game and a hard one. This site helps when you&apos;re stuck: hints that give away a little at a time, the
-          answer when you want it, and an archive of every guest. Please play the game itself at{" "}
+          We publish spoiler-free hints, sourced daily answers, past-guest guides and scoring tools. The playable game and guest videos
+          are at{" "}
           <a href={officialUrl("/", "about")} className="inline-link" rel="noopener" data-ga-event="official_link_click">
             originle.io
           </a>
-          ; nothing here replaces it.
+          . This companion does not host the game or its videos.
         </p>
 
         <h2 className="heading pt-6">Where the answers come from</h2>
@@ -34,8 +34,8 @@ export default function AboutPage() {
         </p>
         <p>
           The public <a href="https://originle.io/daily-config.js" className="inline-link">Originle daily schedule</a> supplies
-          the puzzle order and dates. Each answer page links to that guest&apos;s official page; its published <code>day.js</code> file
-          supplies the answer, clue titles and distances. The &quot;Added&quot; and &quot;updated&quot; times on this site describe
+          the puzzle order and dates. Each answer page links to the guest&apos;s published <code>day.js</code> data file on originle.io,
+          which supplies the answer, clue titles and distances. The &quot;Added&quot; and &quot;updated&quot; times on this site describe
           when we first stored the record and when its content changed, rather than the time someone opened the page.
         </p>
         <p>
@@ -47,7 +47,7 @@ export default function AboutPage() {
         <h2 className="heading pt-6">How the hints are written</h2>
         <p>
           Every puzzle gets three hints, each stronger than the last: the continent and coastline, then the region and official languages,
-          then the first letter, the length of the name and its neighbours. They are built from the facts above, and we can replace them
+          then the first letter, the length of the name and the game&apos;s nearest countries. They are built from the facts above, and we can replace them
           with hand-written ones for any day. The &quot;close misses&quot; tables use the game&apos;s own distances and its published
           scoring formula.
         </p>

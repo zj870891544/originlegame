@@ -3,7 +3,7 @@ import { gameDateAt, puzzleNumberOn } from "../src/lib/time/game-day";
 
 const PATHS = [
   "/", "/today", "/hints", "/archive", `/archive/${puzzleNumberOn(gameDateAt(new Date()))}`, "/how-to-play", "/originle-score-calculator", "/guess-where-im-from-game",
-  "/games-like-originle", "/about",
+  "/games-like-originle", "/originle-solver", "/about",
 ];
 
 for (const path of PATHS) {

@@ -16,6 +16,7 @@ import { getToday } from "@/lib/puzzle/request";
 import { clueRoadmap } from "@/lib/puzzle/view";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { puzzleGuideModified } from "@/lib/seo/puzzle";
 import { formatLongDate } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
       : `Spoiler-free Originle hints for #${number} (${formatLongDate(today)}) appear here soon after midnight Eastern.`,
     path: "/hints",
     ogType: "article",
-    ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzle.updatedAt } : {}),
+    ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzleGuideModified(puzzle.updatedAt) } : {}),
   });
 }
 
@@ -127,7 +128,7 @@ export default async function HintsPage() {
                   path: "/hints",
                   citation: `${puzzle.sourceUrl}day.js`,
                   published: puzzle.firstSeenAt,
-                  modified: puzzle.updatedAt,
+                  modified: puzzleGuideModified(puzzle.updatedAt),
                 })}
               />
             </section>
@@ -172,6 +173,10 @@ export default async function HintsPage() {
               {solvedPoints(5, 0).toLocaleString("en-US")}, but a wrong guess on clue 3 followed by a right one on clue 4 scores only{" "}
               {solvedPoints(4, 1).toLocaleString("en-US")}. When you&apos;re torn between two countries, one more clue is usually cheaper
               than a miss.
+            </p>
+            <p className="mt-3 text-[0.98rem]">
+              Already have a wrong guess and its distance?{" "}
+              <Link href="/originle-solver" className="inline-link">Find candidate countries with the distance solver</Link>.
             </p>
             <p className="mt-3 text-[0.98rem]">
               <Link href="/originle-score-calculator" className="inline-link">

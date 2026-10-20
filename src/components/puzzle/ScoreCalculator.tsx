@@ -107,7 +107,7 @@ export function ScoreCalculator() {
                 className="min-h-11 w-36 rounded border-[1.5px] border-rule bg-card px-3 text-lg tabular-nums"
               />
               <button type="button" className="segment" aria-pressed={input.km === 0} onClick={() => set({ km: 0 })}>
-                0 km, a neighbour
+                Use 0 km
               </button>
             </div>
             <p className="mt-2 text-sm muted">The game shows each wrong guess&apos;s distance from the answer, border to border.</p>

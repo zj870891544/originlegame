@@ -40,7 +40,7 @@ const FAQ = [
   },
   {
     question: "How does distance scoring work in Originle?",
-    answer: `It only counts when no guess is right. Your closest guess then scores 1,000 × e^(−km / 1,500), rounded to tens: ${fmt(closeMissPoints(0))} at 0 km, ${fmt(closeMissPoints(500))} at 500 km, ${fmt(closeMissPoints(1500))} at 1,500 km. A 0 km guess shares a border with the answer.`,
+    answer: `It only counts when no guess is right. Your closest guess then scores 1,000 × e^(−km / 1,500), rounded to tens: ${fmt(closeMissPoints(0))} at 0 km, ${fmt(closeMissPoints(500))} at 500 km, ${fmt(closeMissPoints(1500))} at 1,500 km. Use the game's distance value; 0 km can still be a wrong guess.`,
   },
   {
     question: "What score do you get for giving up in Originle?",
@@ -136,7 +136,8 @@ export default function ScoreCalculatorPage() {
               </li>
             </ul>
             <p>
-              Puzzles #1 and #2 keep the scale they were first played under: 1,000 points per clue, 2,500 for the last, and 500 per miss.
+              Puzzles #1 and #2 keep their original scoring: a correct answer starts at 10,000 points, loses 1,000 for each extra clue
+              through clue 7, and is worth 2,500 on clue 8 before subtracting 500 per miss.
               Choose &ldquo;#1 or #2&rdquo; in the calculator for those.
             </p>
           </section>

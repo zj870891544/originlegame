@@ -117,7 +117,7 @@ const FAQ = [
   },
   {
     question: "Can I play old Originle puzzles?",
-    answer: "Yes. The game has an archive of every past guest, playable with the same rules. Our archive has hints and answers for each of them.",
+    answer: "Yes. Every past guest stays playable in the official archive, with that puzzle's own scoring rules. Puzzles #1 and #2 keep the original rules: a correct answer starts at 10,000 points, loses 1,000 for each extra clue through clue 7, and is worth 2,500 on clue 8 before subtracting 500 per miss. Puzzles #3 onward use the current rules. Our archive has hints and answers for each of them.",
   },
   {
     question: "Which countries can be the answer?",
@@ -243,7 +243,7 @@ export default function HowToPlayPage() {
                 <tbody>
                   {DISTANCES.map((km) => (
                     <tr key={km}>
-                      <td>{km === 0 ? "0 km (shares a border)" : `${fmt(km)} km`}</td>
+                      <td>{km === 0 ? "0 km in the game's distance table" : `${fmt(km)} km`}</td>
                       <td className="num">{fmt(closeMissPoints(km))}</td>
                     </tr>
                   ))}
@@ -258,8 +258,9 @@ export default function HowToPlayPage() {
               works out any round, or reads the result the game&apos;s Share button copies.
             </p>
             <p className="mt-4 text-[0.95rem] muted">
-              Puzzles #1 (Aya) and #2 (Emiliia) keep the rules they were first played under: 1,000 points per clue, 2,500 for the last, and
-              500 per miss. Close misses score the same way on every puzzle. Figures checked against the game on October 16, 2026.
+              Puzzles #1 (Aya) and #2 (Emiliia) keep their original scoring: a correct answer starts at 10,000 points, loses 1,000 for
+              each extra clue through clue 7, and is worth 2,500 on clue 8 before subtracting 500 per miss. Close misses score the same way
+              on every puzzle. Figures checked against the game on October 16, 2026.
             </p>
           </section>
 
@@ -286,6 +287,11 @@ export default function HowToPlayPage() {
                 </div>
               ))}
             </div>
+            <p className="mt-6">
+              Have a distance to work with? The{" "}
+              <Link href="/originle-solver" className="inline-link">country and distance solver</Link>{" "}
+              compares candidate countries against your wrong guesses.
+            </p>
             <p className="mt-6">
               Want to practise on a real guest? The{" "}
               <Link href="/hints" className="inline-link">

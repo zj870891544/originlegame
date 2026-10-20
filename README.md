@@ -14,9 +14,10 @@ Not affiliated with or endorsed by Originle. Built the same way as krilliontoday
 | `/today` | Today's answer, close misses with scores, yesterday's answer | originle answer today |
 | `/hints` | Three hints that get stronger, the clue titles, a "which clue are you on" tracker, how to read each kind of clue | originle hints |
 | `/archive` | Every puzzle, answers blurred until tapped | originle archive |
-| `/archive/<n>` | One puzzle: hints, clue titles, answer, close misses, folded FAQ by date and guest, previous/next | originle #n answer, originle <date> answer |
+| `/archive/<n>` | One puzzle: guest/date summary, hints, answer, country and distance explanation, source times, folded FAQ, previous/next | originle #n answer, originle <date> answer |
 | `/how-to-play` | Rule card, first round, scoring tables, overlooked rules, tips, comparison table, FAQ | how to play originle |
 | `/originle-score-calculator` | Interactive score calculator (round or pasted share text), clue and miss costs, scoring FAQ | originle score calculator |
+| `/originle-solver` | Country candidates from wrong-guess distances and an optional continent, using independent boundary estimates and adjustable tolerance | originle solver, originle distance solver |
 | `/guess-where-im-from-game` | For people who saw the game but don't know its name: what Originle is, roots vs nationality | guess where someone is from game |
 | `/games-like-originle` | Ten similar daily games | games like originle |
 | `/about`, `/privacy`, `/terms` | Sources and editorial notes, privacy, terms | |
@@ -74,11 +75,11 @@ npm run sync:official                 # fills the local database from originle.i
   `n − 1` days after launch, and the rollover follows daylight saving on its own.
 - **No data, no claims.** If today's guest isn't stored yet, pages say it's on its way; an older puzzle is never
   shown as today's. Future puzzle numbers are 404s.
-- **Hints** (`src/lib/puzzle/view.ts`) are written from the data: (1) continent and coastline/borders, (2) region
-  and official languages, (3) first letter, letter count and the neighbouring countries. An editor can replace them
+- **Hints** (`src/lib/puzzle/view.ts`) are written from the data: (1) continent and coastline/landlocked status, (2) region
+  and official languages, (3) first letter, letter count and nearby countries in the game's distance table. An editor can replace them
   for a day by setting `hints_json` to a JSON array of three strings. Country facts live in `src/data/countries.ts`
   (names as the game names them; capitals/languages from `countries-list`, MIT; UN M49 regions).
-- **Close misses** use the game's own distance table: 0 km = shares a border. Points follow the published formula
+- **Close misses** use the game's own distance table: 0 km is a recorded game distance, not proof of a shared land border. Points follow the published formula
   in `src/lib/official/scoring.ts` (checked against the game's scoring script on 2026-10-15). Puzzles #1 and #2 keep
   the original rules.
 - **The official game can't be embedded** (`frame-ancestors 'none'`), so every "play" entry is a link to
@@ -96,6 +97,25 @@ npm run sync:official                 # fills the local database from originle.i
 
 The deploy command uses `--skip-build` so vinext deploys the build after the server-chunk fix. Its built-in
 rebuild would bypass that fix; always run `npm run check` or `npm run build` before deploying.
+
+## Independent country solver
+
+`src/lib/solver` filters 197 countries using up to three wrong-guess distances, an optional continent and
+adjustable tolerance. It uses a static symmetric distance matrix from Natural Earth v5.1.2 public-domain
+country polygons, sampled on the sphere at up to 2 km intervals. It never reads the daily answer, guest or
+database. Country footprints and overseas territories can differ substantially from the game's table;
+even a wide tolerance cannot guarantee the correct country is included.
+
+The generated `src/data/solver-distances.ts` includes source and matrix hashes. To regenerate it offline:
+
+```sh
+python3 -m venv /tmp/originle-solver-venv
+/tmp/originle-solver-venv/bin/pip install numpy==2.4.4 scipy==1.17.1 shapely==2.1.2
+/tmp/originle-solver-venv/bin/python scripts/build-solver-distances.py --report /tmp/originle-solver-model-build.json
+```
+
+The generator pins and checks the source hash and fails on missing or ambiguous country mappings.
+These Python packages are build tools only; the website adds no runtime GIS dependencies.
 
 ## Deploying to Cloudflare
 

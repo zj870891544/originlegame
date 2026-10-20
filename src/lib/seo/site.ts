@@ -6,9 +6,12 @@ export const SITE = {
   tagline: "Daily Answer, Hints & Archive",
   description:
     "Today's Originle answer, three spoiler-free hints, nearby countries for close misses, and every past guest in one archive.",
+  identityDescription:
+    "Originle Game is an independent companion guide to Originle, the daily video geography game at originle.io. We are not affiliated with the creators of Originle.",
   disclaimer:
     "Independent fan guide. Not affiliated with or endorsed by Originle or originle.io.",
   officialGameUrl: "https://originle.io/",
+  officialGameEntityId: "https://originle.io/#game",
   officialArchiveUrl: "https://originle.io/?archive=1",
   contactEmail: "hello@originlegame.app",
   locale: "en_US",
@@ -25,6 +28,7 @@ export const PRIMARY_NAV: NavItem[] = [
   { href: "/archive", label: "Archive" },
   { href: "/how-to-play", label: "How to play" },
   { href: "/originle-score-calculator", label: "Score calculator" },
+  { href: "/originle-solver", label: "Country solver" },
   { href: "/games-like-originle", label: "Similar games" },
 ];
 
@@ -43,6 +47,7 @@ export const FOOTER_NAV: { heading: string; items: NavItem[] }[] = [
       { href: "/", label: "The Originle game" },
       { href: "/how-to-play", label: "How to play Originle" },
       { href: "/originle-score-calculator", label: "Originle score calculator" },
+      { href: "/originle-solver", label: "Originle country solver" },
       { href: "/guess-where-im-from-game", label: "Guess where someone is from" },
       { href: "/games-like-originle", label: "Games like Originle" },
     ],

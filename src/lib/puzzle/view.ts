@@ -21,8 +21,8 @@ export function answerCountry(puzzle: Puzzle): Country {
   return country;
 }
 
-/** Countries whose border touches the answer's on the game's map (distance 0). */
-export function borderingCountries(puzzle: Puzzle): Country[] {
+/** Other guesses recorded at 0 km in the game's distance table. */
+export function zeroDistanceCountries(puzzle: Puzzle): Country[] {
   return Object.entries(puzzle.distances)
     .filter(([code, km]) => km === 0 && code !== puzzle.countryCode)
     .map(([code]) => countryByCode(code))
@@ -30,7 +30,7 @@ export function borderingCountries(puzzle: Puzzle): Country[] {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** The closest countries that don't share a border, nearest first. */
+/** The closest guesses with a positive game distance, nearest first. */
 export function closestCountries(puzzle: Puzzle, limit = 8): NearbyCountry[] {
   return Object.entries(puzzle.distances)
     .filter(([code, km]) => km > 0 && code !== puzzle.countryCode)
@@ -60,14 +60,10 @@ function letterCount(name: string): number {
 export function hintsFor(puzzle: Puzzle): string[] {
   if (puzzle.hints) return puzzle.hints;
   const country = answerCountry(puzzle);
-  const borders = borderingCountries(puzzle);
+  const zeroDistance = zeroDistanceCountries(puzzle);
   const guest = puzzle.guestName;
 
-  const shape = country.landlocked
-    ? `It is landlocked, with ${borders.length} neighbouring ${borders.length === 1 ? "country" : "countries"}.`
-    : borders.length === 0
-      ? "It has a coastline and no land border with any other country."
-      : `It has a coastline and shares land borders with ${borders.length} ${borders.length === 1 ? "country" : "countries"}.`;
+  const shape = country.landlocked ? "It is landlocked." : "It has a coastline.";
   const first = `${guest} represents a country in ${country.continent}. ${shape}`;
 
   const languages = country.languages.slice(0, 2);
@@ -83,12 +79,12 @@ export function hintsFor(puzzle: Puzzle): string[] {
   const words = country.name.split(/\s+/).length;
   const spelling = `The country's name starts with "${initial}" and has ${letters} letters${words > 1 ? ` across ${words} words` : ""}.`;
   const near = closestCountries(puzzle, 2).map((entry) => entry.country.name);
-  const neighbours = borders.length
-    ? `It borders ${listNames(borders.map((c) => c.name))}.`
+  const nearby = zeroDistance.length
+    ? `The game's distance table records ${listNames(zeroDistance.map((c) => c.name))} at 0 km.`
     : near.length
-      ? `Its nearest neighbours across the water are ${listNames(near)}.`
+      ? `Nearby guesses in the game's distance table include ${listNames(near)}.`
       : "";
-  const third = `${spelling} ${neighbours}`.trim();
+  const third = `${spelling} ${nearby}`.trim();
 
   return [first, second, third];
 }

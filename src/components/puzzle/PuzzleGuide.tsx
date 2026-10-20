@@ -2,13 +2,13 @@ import Link from "@/components/shared/Link";
 import type { Puzzle } from "@/lib/db/puzzles";
 import {
   answerCountry,
-  borderingCountries,
   closestCountries,
   clueRoadmap,
   formatKm,
   hintsFor,
   listNames,
   refusedGuesses,
+  zeroDistanceCountries,
 } from "@/lib/puzzle/view";
 import { countryInSentence } from "@/lib/countries";
 import { formatLongDate } from "@/lib/time/game-day";
@@ -27,7 +27,7 @@ export function HintEnvelopes({ puzzle }: { puzzle: Puzzle }) {
         <Envelope
           key={index}
           label={`Hint ${index + 1}: ${HINT_NAMES[index]}`}
-          note={index === 0 ? "The continent and the coastline" : index === 1 ? "The region and the languages" : "The spelling and the neighbours"}
+          note={index === 0 ? "The continent and the coastline" : index === 1 ? "The region and the languages" : "The spelling and nearby guesses"}
           action="Open hint"
           event="hint_open"
           level={index + 1}
@@ -113,7 +113,7 @@ export function AnswerEnvelope({ puzzle, headingLevel = "h3" }: { puzzle: Puzzle
 /** Countries next to the answer on the game's distance table, and what a miss on each scores. */
 export function NearbyCountries({ puzzle, headingLevel = "h2" }: { puzzle: Puzzle; headingLevel?: "h2" | "h3" }) {
   const country = answerCountry(puzzle);
-  const borders = borderingCountries(puzzle);
+  const zeroDistance = zeroDistanceCountries(puzzle);
   const closest = closestCountries(puzzle, 8);
   const Heading = headingLevel;
   return (
@@ -122,28 +122,28 @@ export function NearbyCountries({ puzzle, headingLevel = "h2" }: { puzzle: Puzzl
         Close misses for #{puzzle.number}
       </Heading>
       <p className="mt-3 max-w-[66ch] muted">
-        After a wrong guess Originle tells you how far it was from {country.name}, measured border to border. A guess that
-        touches the answer&apos;s border is 0 km away. If all three guesses miss, your score comes from the closest one.
+        After a wrong guess, Originle shows a distance from {country.name} in its published border-to-border table. If all three
+        guesses miss, your score comes from the closest one.
       </p>
-      <Envelope label="Show the nearby countries" note="This names the answer's neighbours, so it narrows things down a lot." action="Show">
-        {borders.length ? (
+      <Envelope label="Show the nearby countries" note="This lists nearby guesses, so it narrows things down a lot." action="Show">
+        {zeroDistance.length ? (
           <p>
-            <span className="font-semibold">0 km, sharing a border:</span> {listNames(borders.map((c) => `${c.flag} ${c.name}`))}. A miss on
-            any of these still scores 1,000.
+            <span className="font-semibold">0 km in Originle&apos;s distance table:</span> {listNames(zeroDistance.map((c) => `${c.flag} ${c.name}`))}.
+            A miss on any of these earns 1,000 close-miss points if none of your guesses is correct.
           </p>
         ) : (
           <p>
-            <span className="font-semibold">{country.name} has no land border</span> with another country, so every miss is some distance away.
+            Originle&apos;s distance table lists no other country at 0 km from {country.name}.
           </p>
         )}
         <div className="mt-4 overflow-x-auto">
           <table className="ledger min-w-[22rem]">
-            <caption className="sr-only">Nearest countries without a shared border</caption>
+            <caption className="sr-only">Closest countries with a positive game distance</caption>
             <thead>
               <tr>
                 <th scope="col">Next closest</th>
                 <th scope="col" className="num">
-                  Distance
+                  Game distance
                 </th>
                 <th scope="col" className="num">
                   Points for this miss

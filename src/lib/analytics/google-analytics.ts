@@ -8,7 +8,7 @@ import { SITE } from "@/lib/seo/site";
  */
 
 export const ANALYTICS_EVENTS = [
-  "hint_open", "answer_reveal", "reveal_all", "official_link_click", "roadmap_open", "clue_progress", "score_calculate",
+  "hint_open", "answer_reveal", "reveal_all", "official_link_click", "roadmap_open", "clue_progress", "score_calculate", "solver_filter",
 ] as const;
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[number];
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
+import { PuzzleExplanation } from "@/components/puzzle/PuzzleExplanation";
 import { NearbyCountries, PuzzleCard } from "@/components/puzzle/PuzzleGuide";
 import { SourceNote } from "@/components/puzzle/SourceNote";
 import { Faq } from "@/components/shared/Faq";
@@ -9,11 +10,12 @@ import Link from "@/components/shared/Link";
 import { PageShell } from "@/components/shared/PageShell";
 import { countryInSentence } from "@/lib/countries";
 import { rulesForPuzzle } from "@/lib/official/calculator";
+import { puzzleGuestSummary } from "@/lib/puzzle/explanation";
 import { getPuzzleByNumber, getToday } from "@/lib/puzzle/request";
 import { answerCountry } from "@/lib/puzzle/view";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { puzzleAnswerSummary } from "@/lib/seo/puzzle";
+import { puzzleAnswerSummary, puzzleGuideModified } from "@/lib/seo/puzzle";
 import { SITE } from "@/lib/seo/site";
 import { formatLongDate, formatWeekday } from "@/lib/time/game-day";
 
@@ -39,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/archive/${puzzle.number}`,
     ogType: "article",
     published: puzzle.firstSeenAt,
-    modified: puzzle.updatedAt,
+    modified: puzzleGuideModified(puzzle.updatedAt),
   });
 }
 
@@ -64,7 +66,7 @@ export default async function PuzzlePage({ params }: Props) {
       question: `Can I still play Originle #${puzzle.number}?`,
       answer: `Yes. Every past guest stays playable in the official archive at originle.io, with three guesses${
         rulesForPuzzle(puzzle.number) === "original"
-          ? " and the original scoring this puzzle was first played under: 1,000 points per clue (2,500 for the last) and 500 per miss."
+          ? " and the original scoring: a correct answer starts at 10,000 points, loses 1,000 for each extra clue through clue 7, and is worth 2,500 on clue 8 before subtracting 500 per miss."
           : " and the same scoring as today's puzzle."
       }`,
     },
@@ -98,9 +100,14 @@ export default async function PuzzlePage({ params }: Props) {
         </>
       }
     >
+      <section aria-labelledby="puzzle-facts" className="sheet mb-8 p-5 sm:p-6">
+        <h2 id="puzzle-facts" className="subheading">Puzzle at a glance</h2>
+        <p className="mt-2 max-w-[66ch] muted">{puzzleGuestSummary(puzzle)}</p>
+      </section>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="min-w-0 space-y-12">
           <PuzzleCard puzzle={puzzle} showNearbyLink={false} />
+          <PuzzleExplanation puzzle={puzzle} />
           <NearbyCountries puzzle={puzzle} />
           <SourceNote puzzle={puzzle} />
           <section aria-labelledby="puzzle-faq">
@@ -142,7 +149,7 @@ export default async function PuzzlePage({ params }: Props) {
           description: puzzleAnswerSummary(puzzle),
           citation: `${puzzle.sourceUrl}day.js`,
           published: puzzle.firstSeenAt,
-          modified: puzzle.updatedAt,
+          modified: puzzleGuideModified(puzzle.updatedAt),
         })}
       />
     </PageShell>

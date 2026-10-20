@@ -2,6 +2,11 @@ import { SITE, absoluteUrl } from "./site";
 
 type JsonLd = Record<string, unknown>;
 
+/** The guide discusses this external game; it is not another identity of this site. */
+function officialGameSubject(): JsonLd {
+  return { "@id": SITE.officialGameEntityId, "@type": "VideoGame", name: "Originle", url: SITE.officialGameUrl };
+}
+
 export function websiteJsonLd(): JsonLd {
   return {
     "@context": "https://schema.org",
@@ -10,8 +15,9 @@ export function websiteJsonLd(): JsonLd {
     name: SITE.name,
     alternateName: ["OriginleGame", "originlegame.app"],
     url: `${SITE.origin}/`,
-    description: SITE.description,
+    description: SITE.identityDescription,
     inLanguage: "en",
+    about: officialGameSubject(),
     publisher: { "@id": `${SITE.origin}/#organization` },
   };
 }
@@ -25,7 +31,7 @@ export function organizationJsonLd(): JsonLd {
     url: `${SITE.origin}/`,
     logo: absoluteUrl("/icon-512.png"),
     email: SITE.contactEmail,
-    description: "An independent fan guide to the Originle daily geography game. Not affiliated with or endorsed by Originle.",
+    description: SITE.identityDescription,
   };
 }
 
@@ -34,6 +40,7 @@ export function originleGameJsonLd(): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "VideoGame",
+    "@id": SITE.officialGameEntityId,
     name: "Originle",
     url: SITE.officialGameUrl,
     description:
@@ -92,7 +99,8 @@ export function articleJsonLd(page: DatedPage): JsonLd {
     inLanguage: "en",
     isAccessibleForFree: true,
     image: absoluteUrl("/og.png"),
-    about: { "@type": "VideoGame", name: "Originle", url: SITE.officialGameUrl },
+    about: officialGameSubject(),
+    isPartOf: { "@id": `${SITE.origin}/#website` },
     author: { "@id": `${SITE.origin}/#organization` },
     publisher: { "@id": `${SITE.origin}/#organization` },
   };
@@ -110,7 +118,8 @@ export function webToolJsonLd(tool: { name: string; path: string; description: s
     operatingSystem: "Any",
     isAccessibleForFree: true,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    about: { "@type": "VideoGame", name: "Originle", url: SITE.officialGameUrl },
+    about: officialGameSubject(),
+    isPartOf: { "@id": `${SITE.origin}/#website` },
     publisher: { "@id": `${SITE.origin}/#organization` },
   };
 }

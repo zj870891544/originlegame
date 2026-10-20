@@ -12,7 +12,7 @@ import { PageShell } from "@/components/shared/PageShell";
 import { getToday } from "@/lib/puzzle/request";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { puzzleAnswerSummary } from "@/lib/seo/puzzle";
+import { puzzleAnswerSummary, puzzleGuideModified } from "@/lib/seo/puzzle";
 import { formatLongDate } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       : `The Originle #${number} answer for ${formatLongDate(today)} appears here soon after midnight Eastern, behind three spoiler-free hints.`,
     path: "/today",
     ogType: "article",
-    ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzle.updatedAt } : {}),
+    ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzleGuideModified(puzzle.updatedAt) } : {}),
   });
 }
 
@@ -42,7 +42,7 @@ export default async function TodayPage() {
     {
       question: "Does a guess of a neighbouring country count?",
       answer:
-        "No, only the exact country is correct. A neighbour that shares a border is 0 km away, though, so if all three guesses miss, a neighbour still earns the full 1,000 close-miss points.",
+        "No, only the exact country is correct. If all three guesses miss, a closest guess recorded as 0 km in the game's distance table earns the full 1,000 close-miss points. That game distance does not by itself establish a shared land border.",
     },
     {
       question: "Is the answer the same for everyone?",
@@ -100,7 +100,7 @@ export default async function TodayPage() {
                   description: puzzleAnswerSummary(puzzle),
                   citation: `${puzzle.sourceUrl}day.js`,
                   published: puzzle.firstSeenAt,
-                  modified: puzzle.updatedAt,
+                  modified: puzzleGuideModified(puzzle.updatedAt),
                 })}
               />
             </>

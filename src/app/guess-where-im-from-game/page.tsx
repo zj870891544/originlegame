@@ -44,6 +44,11 @@ const FAQ = [
       "It's most likely Originle, a free daily game at originle.io. Each day a real person appears in eight short video clues, and you guess the country they represent in three tries, scored out of 10,000.",
   },
   {
+    question: "What's the video game where people talk and you guess their country?",
+    answer:
+      "If you remember one guest speaking in short clips, eight clues and three country guesses, the game is Originle at originle.io. You listen for language, food, family and geography clues to identify the country the guest represents. This site is its independent hints and answer guide.",
+  },
+  {
     question: "Is Originle a nationality guessing game?",
     answer:
       "Nearly, but not quite. The answer is the country a guest represents through their roots and culture, which isn't always their passport or where they live. A guest who grew up in London can be representing Iraq, and the game can refuse a passport country as a guess.",
@@ -53,8 +58,9 @@ const FAQ = [
     answer: "At originle.io, in any web browser, free and with no account. Your progress is saved in the browser you play in.",
   },
   {
-    question: "Are the people in Originle real?",
-    answer: "Yes. The game says every guest is a real person, telling you about the country they represent in their own words.",
+    question: "Are the people in Originle real or AI-generated?",
+    answer:
+      "Originle's official Questions panel says every guest is a real person, telling you about the country they represent in their own words. That describes the guests; it is not a guarantee that no AI tools are used anywhere in producing the game.",
   },
   {
     question: "Can I play the ones I missed?",
@@ -93,7 +99,10 @@ export default function GuessWhereImFromPage() {
             <h2 id="signs" className="heading">
               Is this the game you saw?
             </h2>
-            <p className="mt-3 max-w-[66ch] muted">If most of these sound familiar, it was Originle.</p>
+            <p className="mt-3 max-w-[66ch] muted">
+              Trying to remember the game&apos;s name from a video? Originle is the daily country guessing game with people talking
+              about their lives, rather than a map, flag or street scene. Check these details against the game you saw.
+            </p>
             <ul className="mt-6 grid gap-px overflow-hidden rounded-md border border-rule bg-rule sm:grid-cols-2">
               {SIGNS.map((sign) => (
                 <li key={sign.title} className="bg-card p-5">
