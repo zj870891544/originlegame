@@ -12,14 +12,10 @@ describe("independent boundary-distance model", () => {
     for (const [index, code] of SOLVER_CODES.entries()) {
       expect(SOLVER_DISTANCE_ROWS[index]).toHaveLength(SOLVER_CODES.length - index - 1);
       expect(getModelDistanceKm(code, code)).toBe(0);
-      for (const other of SOLVER_CODES) {
-        const km = getModelDistanceKm(code, other)!;
-        expect(Number.isInteger(km)).toBe(true);
-        expect(km).toBeGreaterThanOrEqual(0);
-        expect(km).toBeLessThanOrEqual(MAX_DISTANCE_KM);
-        expect(km).toBe(getModelDistanceKm(other, code));
-        distinct.add(km);
-      }
+      const row = SOLVER_CODES.map((other) => getModelDistanceKm(code, other));
+      expect(row.every((km) => km !== null && Number.isInteger(km) && km >= 0 && km <= MAX_DISTANCE_KM), code + " distances").toBe(true);
+      expect(row, code + " symmetry").toEqual(SOLVER_CODES.map((other) => getModelDistanceKm(other, code)));
+      for (const km of row) if (km !== null) distinct.add(km);
     }
     expect(distinct.size).toBeGreaterThan(100);
   });

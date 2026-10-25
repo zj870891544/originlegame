@@ -1,4 +1,5 @@
 import { nextResetAt } from "@/lib/time/game-day";
+import { PENDING_PUZZLE_MARKER } from "./cache-signals";
 
 /**
  * Edge cache for rendered pages.
@@ -104,6 +105,15 @@ export interface PageCacheStore {
   put(key: string, response: Response): Promise<void>;
 }
 
+/** Never let an awaiting render hide a puzzle that arrives during the cache lifetime. */
+async function storeRendered(store: PageCacheStore, key: string, response: Response, ttlSeconds: number): Promise<void> {
+  const type = response.headers.get("content-type") ?? "";
+  if (type.startsWith("text/html") || type.startsWith("text/x-component")) {
+    if ((await response.clone().text()).includes(PENDING_PUZZLE_MARKER)) return;
+  }
+  await store.put(key, forStorage(response, ttlSeconds));
+}
+
 /**
  * Answers from the cache when it can; otherwise renders, and stores the result
  * for the next visitor. A cache that fails is treated as a cache that is empty.
@@ -125,6 +135,8 @@ export async function servePage(
   if (!isCacheable(rendered)) return rendered;
   const response = new Response(rendered.body, rendered);
   response.headers.set(CACHE_STATUS_HEADER, "miss");
-  defer(store.put(plan.key, forStorage(response.clone(), plan.ttlSeconds)).catch(() => undefined));
+  // Inspect only the cache copy, off the visitor's streaming response path. The dynamic
+  // renderer's original no-store browser policy is left intact, as on a normal miss.
+  defer(storeRendered(store, plan.key, response.clone(), plan.ttlSeconds).catch(() => undefined));
   return response;
 }
