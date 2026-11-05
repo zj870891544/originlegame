@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `Originle Hints Today #${number}: Spoiler-Free Clues`,
     description: puzzle
       ? `Today's Originle hints for #${number} (${formatLongDate(today)}), no spoilers: the continent, the region and languages, then the spelling. Track which clue you're on. Where is ${puzzle.guestName} from?`
-      : `Spoiler-free Originle hints for #${number} (${formatLongDate(today)}) appear here soon after midnight Eastern.`,
+      : `Check availability for Originle #${number} on ${formatLongDate(today)} or find spoiler-free hints for released puzzles in the archive.`,
     path: "/hints",
     ogType: "article",
     ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzleGuideModified(puzzle.updatedAt) } : {}),
@@ -86,7 +86,9 @@ export default async function HintsPage() {
       path="/hints"
       crumbName="Hints"
       title={`Originle hints today: #${number}`}
-      lead={`${formatLongDate(today)}. Each hint gives away a little more than the one before. Open one, play a clue or two on originle.io, and come back if you need the next.`}
+      lead={puzzle
+        ? `${formatLongDate(today)}. Each hint gives away a little more than the one before. Open one, play a clue or two on originle.io, and come back if you need the next.`
+        : `${formatLongDate(today)}. Check puzzle availability below.`}
       aside={puzzle ? <Postmark number={puzzle.number} date={puzzle.gameDate} /> : undefined}
     >
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
@@ -163,7 +165,7 @@ export default async function HintsPage() {
           </section>
         </div>
         <aside className="min-w-0 space-y-10">
-          <PlayOfficial number={number} campaign="hints" />
+          <PlayOfficial number={puzzle?.number} campaign="hints" />
           <section aria-labelledby="when" className="sheet p-5">
             <h2 id="when" className="subheading">
               When to guess

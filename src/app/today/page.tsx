@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `Originle Answer Today #${number} (${formatLongDate(today)})`,
     description: puzzle
       ? `Where is ${puzzle.guestName} from? Today's Originle answer and solution for #${number} (${formatLongDate(today)}), behind three spoiler-free hints, plus yesterday's answer and the close misses.`
-      : `The Originle #${number} answer for ${formatLongDate(today)} appears here soon after midnight Eastern, behind three spoiler-free hints.`,
+      : `Check availability for Originle #${number} on ${formatLongDate(today)} or browse hints and answers for released puzzles in the archive.`,
     path: "/today",
     ogType: "article",
     ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzleGuideModified(puzzle.updatedAt) } : {}),
@@ -37,7 +37,7 @@ export default async function TodayPage() {
       question: `What is the Originle answer today, #${number}?`,
       answer: puzzle
         ? puzzleAnswerSummary(puzzle)
-        : `Originle #${number} for ${formatLongDate(today)} will appear on this page soon after midnight Eastern time.`,
+        : `This guide has no answer for Originle #${number} on ${formatLongDate(today)}. Past answers are available in the archive.`,
     },
     {
       question: "Does a guess of a neighbouring country count?",
@@ -53,11 +53,10 @@ export default async function TodayPage() {
       : []),
     {
       question: "What time does the next Originle come out?",
-      answer: "At midnight in New York: 04:00 UTC while daylight saving time is on (EDT), 05:00 UTC in winter (EST). This page switches to the new guest within minutes.",
+      answer: "Originle uses midnight in New York as the game-day boundary. Check originle.io for release updates.",
       body: (
         <>
-          At midnight in New York: 04:00 UTC while daylight saving time is on (EDT), 05:00 UTC in winter (EST). This page switches to the
-          new guest within minutes.
+          Originle uses midnight in New York as the game-day boundary. Check originle.io for release updates.
           <LocalResetTime />
         </>
       ),
@@ -71,11 +70,15 @@ export default async function TodayPage() {
       lead={
         <>
           {formatLongDate(today)}.{" "}
-          {puzzle ? `Where is ${puzzle.guestName} from? ` : ""}Try the{" "}
-          <Link href="/hints" className="inline-link">
-            hints
-          </Link>{" "}
-          first, or open the answer straight away. It&apos;s folded so a glance won&apos;t spoil it.
+          {puzzle ? (
+            <>
+              Where is {puzzle.guestName} from? Try the{" "}
+              <Link href="/hints" className="inline-link">
+                hints
+              </Link>{" "}
+              first, or open the answer straight away. It&apos;s folded so a glance won&apos;t spoil it.
+            </>
+          ) : "Check puzzle availability below."}
         </>
       }
     >
@@ -125,7 +128,7 @@ export default async function TodayPage() {
           ) : null}
         </div>
         <aside className="min-w-0 space-y-10">
-          <PlayOfficial number={number} campaign="today" />
+          <PlayOfficial number={puzzle?.number} campaign="today" />
           <section aria-labelledby="today-faq">
             <h2 id="today-faq" className="heading">
               About today&apos;s answer

@@ -2,8 +2,8 @@ import { countryName } from "@/lib/countries";
 import type { Puzzle } from "@/lib/db/puzzles";
 import { formatLongDate } from "@/lib/time/game-day";
 
-/** Actual editorial update to the shared hints, sources and answer explanations. */
-export const PUZZLE_GUIDE_EDITED = "2026-10-20T02:16:00.000Z";
+/** Last editorial update to shared puzzle content and play links. */
+export const PUZZLE_GUIDE_EDITED = "2026-11-05T06:11:35.000Z";
 
 /** Page content can change independently of the official puzzle record. */
 export function puzzleGuideModified(updatedAt: string): string {

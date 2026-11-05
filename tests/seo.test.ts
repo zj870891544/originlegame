@@ -117,8 +117,8 @@ describe("sitemap content dates", () => {
   });
 
   it("does not give today's answer a historical correction's newer timestamp", () => {
-    const today = { ...summary, number: 17, gameDate: "2026-10-21", updatedAt: "2026-10-21T04:01:00.000Z" };
-    const correction = { ...summary, updatedAt: "2026-10-21T09:00:00.000Z" };
+    const today = { ...summary, number: 33, gameDate: "2026-11-06", updatedAt: "2026-11-06T05:01:00.000Z" };
+    const correction = { ...summary, updatedAt: "2026-11-06T09:00:00.000Z" };
     expect(entry([today, correction], "/today", today.gameDate)?.lastModified).toBe(today.updatedAt);
     expect(entry([today, correction], "/hints", today.gameDate)?.lastModified).toBe(today.updatedAt);
     expect(entry([today, correction], "/archive")?.lastModified).toBe(correction.updatedAt);
@@ -126,11 +126,12 @@ describe("sitemap content dates", () => {
   });
 
   it("keeps known editorial dates when the database is unavailable, without inventing daily dates", () => {
-    for (const path of ["/archive"]) {
-      expect(entry([], path)?.lastModified).toBe("2026-10-19");
-    }
+    expect(entry([], "/archive")?.lastModified).toBe("2026-11-05");
     expect(entry([], "/")?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
-    for (const path of ["/how-to-play", "/originle-score-calculator", "/games-like-originle", "/about", "/guess-where-im-from-game", "/originle-solver"]) {
+    for (const path of ["/how-to-play", "/originle-score-calculator", "/guess-where-im-from-game"]) {
+      expect(entry([], path)?.lastModified).toBe("2026-11-05");
+    }
+    for (const path of ["/games-like-originle", "/about", "/originle-solver"]) {
       expect(entry([], path)?.lastModified).toBe("2026-10-20");
     }
     expect(entry([], "/today")).not.toHaveProperty("lastModified");
@@ -145,16 +146,16 @@ describe("sitemap content dates", () => {
 
   it("advertises listing edits even when their puzzle records are older", () => {
     expect(entry([summary], "/")?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
-    expect(entry([summary], "/archive")?.lastModified).toBe("2026-10-19");
+    expect(entry([summary], "/archive")?.lastModified).toBe("2026-11-05");
     for (const path of ["/today", "/hints"]) {
       expect(entry([summary], path, summary.gameDate)?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
     }
   });
 
   it("uses newer puzzle changes over the listing pages' editorial dates", () => {
-    const newer = { ...summary, number: 16, gameDate: "2026-10-20", updatedAt: "2026-10-20T04:01:00.000Z" };
+    const newer = { ...summary, number: 32, gameDate: "2026-11-05", updatedAt: "2026-11-05T06:30:00.000Z" };
     for (const path of ["/", "/archive"]) {
-      expect(entry([newer, summary], path, "2026-10-20")?.lastModified).toBe(newer.updatedAt);
+      expect(entry([newer, summary], path, newer.gameDate)?.lastModified).toBe(newer.updatedAt);
     }
   });
 });

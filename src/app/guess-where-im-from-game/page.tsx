@@ -8,7 +8,6 @@ import { CLUES, GUESSES, MAX_SCORE } from "@/lib/official/scoring";
 import { originleGameJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { officialUrl } from "@/lib/seo/site";
-import { gameDateAt, puzzleNumberOn } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +26,7 @@ const SIGNS = [
   { title: `${GUESSES} guesses`, text: "Type a country to guess. A wrong one tells you how far it was from the answer, in kilometres." },
   { title: "A spinning globe", text: "Players tap countries to flag hunches and build a shortlist while they listen." },
   { title: `A score out of ${fmt(MAX_SCORE)}`, text: "Every clue opened and every miss costs points. Results are shared as red and green squares." },
-  { title: "A new person at midnight", text: "Everyone meets the same guest each day, at midnight Eastern time, and past guests stay playable." },
+  { title: "The same guest for everyone", text: "On release days, everyone meets the same guest. Past guests stay playable in the official archive." },
 ];
 
 const READING = [
@@ -41,7 +40,7 @@ const FAQ = [
   {
     question: "What is the game where you guess where someone is from?",
     answer:
-      "It's most likely Originle, a free daily game at originle.io. Each day a real person appears in eight short video clues, and you guess the country they represent in three tries, scored out of 10,000.",
+      "It's most likely Originle, a free daily game at originle.io. In each puzzle, a real person appears in eight short video clues, and you guess the country they represent in three tries, scored out of 10,000.",
   },
   {
     question: "What's the video game where people talk and you guess their country?",
@@ -73,7 +72,6 @@ const FAQ = [
 ];
 
 export default function GuessWhereImFromPage() {
-  const number = puzzleNumberOn(gameDateAt(new Date()));
   return (
     <PageShell
       path="/guess-where-im-from-game"
@@ -190,7 +188,7 @@ export default function GuessWhereImFromPage() {
         </div>
 
         <aside className="min-w-0 space-y-8 lg:sticky lg:top-24 lg:self-start">
-          <PlayOfficial number={number} campaign="guess_where_from" />
+          <PlayOfficial campaign="guess_where_from" />
           <section aria-labelledby="more" className="sheet p-5">
             <h2 id="more" className="subheading">
               Wanted something else?

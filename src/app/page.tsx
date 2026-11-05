@@ -18,13 +18,13 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata({
     title: "Originle Game Guide: Today's Hints, Answers & Archive",
-    description: "An independent guide to Originle at originle.io, the daily country guessing game. Get today's hints and answer, replay past guests and understand the scoring.",
+    description: "An independent guide to Originle at originle.io, the daily country guessing game. Find hints and answers for released puzzles, replay past guests and understand the scoring.",
     path: "/",
   });
 }
 
 const STEPS = [
-  { title: "Meet the guest", text: "A new person introduces themself in a short video at midnight Eastern time." },
+  { title: "Meet the guest", text: "Each puzzle starts with a short video of a person introducing themself." },
   { title: "Open clues as you need them", text: "Eight video clues, each easier than the last. Every one you open lowers what a right answer is worth." },
   { title: "Guess the country", text: "You get three guesses. A wrong one costs 30% of your points and tells you how far away you were." },
   { title: "Compare your score", text: "Scores are out of 10,000. Missing all three still earns up to 1,000 for your closest guess." },
@@ -34,17 +34,17 @@ const FAQ = [
   {
     question: "What is the Originle game?",
     answer:
-      "Originle is a free daily geography game at originle.io. Each day a real person shares their story in eight short video clues, and you guess the country they represent in up to three tries. Scores are out of 10,000.",
+      "Originle is a free daily geography game at originle.io. In each puzzle, a real person shares their story in eight short video clues, and you guess the country they represent in up to three tries. Scores are out of 10,000.",
   },
   {
     question: "What is today's Originle answer?",
     answer:
-      "Today's answer is on this page and on the Today page, folded away inside the answer envelope so you only see it when you open it. Try the three hints first if you want to keep the score honest.",
+      "The Today page shows whether this New York game day has a puzzle. When it does, the answer is folded away inside the answer envelope and the three hints are available separately.",
   },
   {
     question: "When does Originle reset?",
     answer:
-      "A new guest arrives at midnight in New York (Eastern time) every day: 04:00 UTC during daylight saving time and 05:00 UTC in winter. This site picks up the new guest within minutes.",
+      "Originle uses midnight in New York to start a new game day. On release days, this guide adds the guest once it can read the published puzzle.",
   },
   {
     question: "Is the answer the country where the guest lives?",
@@ -119,7 +119,7 @@ export default async function HomePage() {
       </section>
 
       <section className="shell mt-10">
-        <PlayOfficial number={number} campaign="home" />
+        <PlayOfficial number={puzzle?.number} campaign="home" />
       </section>
 
       <section className="shell mt-16" aria-labelledby="how">

@@ -8,7 +8,7 @@ function format(ms: number): string {
   return [Math.floor(seconds / 3600), Math.floor(seconds / 60) % 60, seconds % 60].map((n) => String(n).padStart(2, "0")).join(":");
 }
 
-/** Time left until midnight in New York, when Originle releases the next guest. */
+/** Time left until midnight in New York. */
 export function Countdown() {
   const [left, setLeft] = useState<string | null>(null);
   useEffect(() => {
@@ -19,7 +19,7 @@ export function Countdown() {
   }, []);
   return (
     <span className="font-semibold tabular-nums" aria-live="off">
-      {left ?? "at midnight Eastern"}
+      {left ?? "—"}
     </span>
   );
 }

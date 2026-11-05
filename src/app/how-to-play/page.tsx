@@ -10,7 +10,6 @@ import { CLUES, GUESSES, MAX_SCORE, closeMissPoints, cluePoints, solvedPoints } 
 import { originleGameJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { officialUrl } from "@/lib/seo/site";
-import { gameDateAt, puzzleNumberOn } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +28,7 @@ const RULE_CARD = [
   { title: "Goal", text: "Name the country today's guest represents through their roots and culture, not necessarily where they live now." },
   { title: "Your moves", text: "Watch the first video, open the next clue when you need it, lock in a guess, or give up. A globe lets you mark and shortlist countries." },
   { title: "Feedback", text: "A wrong guess shows its distance from the answer, border to border. Your remaining points show what a right answer is still worth." },
-  { title: "End of the round", text: "The round ends on a correct guess, your third miss, or giving up. A new guest arrives at midnight Eastern." },
+  { title: "End of the round", text: "The round ends on a correct guess, your third miss, or giving up. You can replay previous guests in the official archive." },
 ];
 
 const EASY_TO_MISS = [
@@ -67,10 +66,11 @@ const FAQ = [
   { question: "What's the highest score?", answer: `${fmt(MAX_SCORE)}, for naming the country from the first video without a miss.` },
   {
     question: "When does a new Originle come out?",
-    answer: "Every day at midnight in New York: 04:00 UTC in summer (EDT) and 05:00 UTC in winter (EST).",
+    answer: "The game day starts at midnight in New York: 04:00 UTC during daylight saving time and 05:00 UTC during standard time. Check the official site for release updates.",
     body: (
       <>
-        Every day at midnight in New York: 04:00 UTC in summer (EDT) and 05:00 UTC in winter (EST).
+        The game day starts at midnight in New York: 04:00 UTC during daylight saving time and 05:00 UTC during standard time.
+        Check the official site for release updates.
         <LocalResetTime />
       </>
     ),
@@ -126,7 +126,6 @@ const FAQ = [
 ];
 
 export default function HowToPlayPage() {
-  const number = puzzleNumberOn(gameDateAt(new Date()));
   return (
     <PageShell
       path="/how-to-play"
@@ -141,7 +140,7 @@ export default function HowToPlayPage() {
               What is Originle?
             </h2>
             <p>
-              Originle is a daily geography game built around real people. Each day a new guest tells their story in short videos: a few
+              Originle is a daily geography game built around real people. Each puzzle features a guest telling their story in short videos: a few
               words in their language, something from home, the landscape, a tradition, how big their country feels. Your job is to work
               out which country they represent.
             </p>
@@ -385,7 +384,7 @@ export default function HowToPlayPage() {
               <dd>{GUESSES}</dd>
               <dt className="muted">Top score</dt>
               <dd>{fmt(MAX_SCORE)}</dd>
-              <dt className="muted">New guest</dt>
+              <dt className="muted">Game day starts</dt>
               <dd>Midnight Eastern</dd>
               <dt className="muted">Countries</dt>
               <dd>{COUNTRY_COUNT}</dd>
@@ -395,7 +394,7 @@ export default function HowToPlayPage() {
               <dd>October 5, 2026</dd>
             </dl>
           </section>
-          <PlayOfficial number={number} campaign="how_to_play" />
+          <PlayOfficial campaign="how_to_play" />
         </aside>
       </div>
       <JsonLd data={originleGameJsonLd()} />

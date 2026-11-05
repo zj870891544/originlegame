@@ -5,18 +5,22 @@ import { Countdown } from "./Countdown";
  * The way into the real game. Originle doesn't allow itself to be framed by
  * other sites, so this is a ticket that opens originle.io in a new tab.
  */
-export function PlayOfficial({ number, campaign = "play_card" }: { number: number; campaign?: string }) {
+export function PlayOfficial({ number, campaign = "play_card" }: { number?: number; campaign?: string }) {
   return (
     <div className="@container relative overflow-hidden rounded-md border border-ink bg-ink text-card">
       <div className="grid gap-6 p-5 @2xl:grid-cols-[1fr_auto] @2xl:items-center @md:p-7">
         <div>
-          <p className="font-display text-[1.55rem] font-semibold leading-tight">Play today&apos;s Originle, #{number}</p>
+          <p className="font-display text-[1.55rem] font-semibold leading-tight">
+            {number === undefined ? "Play Originle on the official site" : `Play today's Originle, #${number}`}
+          </p>
           <p className="mt-2 max-w-[54ch] text-[0.98rem] text-card/80">
             Meet the guest in short videos and name their country in three guesses. Free, in your browser, on the official site.
           </p>
-          <p className="mt-3 text-sm text-card/70">
-            Next guest in <Countdown />
-          </p>
+          {number !== undefined && (
+            <p className="mt-3 text-sm text-card/70">
+              Time until midnight Eastern <Countdown />
+            </p>
+          )}
         </div>
         <div className="flex flex-col items-start gap-2 @2xl:items-end">
           <a

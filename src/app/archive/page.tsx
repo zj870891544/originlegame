@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { ArchiveTable } from "@/components/puzzle/ArchiveTable";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
 import { Faq } from "@/components/shared/Faq";
@@ -10,23 +11,29 @@ import { safeRead } from "@/lib/db/client";
 import { listPuzzles } from "@/lib/db/puzzles";
 import { itemListJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { LAUNCH_DATE, formatLongDate, gameDateAt, puzzleNumberOn } from "@/lib/time/game-day";
+import { LAUNCH_DATE, formatLongDate, gameDateAt } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
 
+const getArchive = cache(async () => {
+  const today = gameDateAt(new Date());
+  const { data: puzzles } = await safeRead((db) => listPuzzles(db, today), []);
+  return { today, puzzles };
+});
+
 export async function generateMetadata(): Promise<Metadata> {
-  const number = puzzleNumberOn(gameDateAt(new Date()));
+  const { puzzles } = await getArchive();
+  const latest = puzzles[0];
   return pageMetadata({
-    title: `Originle Archive: All Past Answers (#1–#${number})`,
+    title: latest ? `Originle Archive: All Past Answers (#1–#${latest.number})` : "Originle Archive: All Past Answers",
     description: `Every Originle answer since #1 on ${formatLongDate(LAUNCH_DATE)}: each guest, the date, the country (blurred until you tap it) and a page of hints and close misses.`,
     path: "/archive",
   });
 }
 
 export default async function ArchivePage() {
-  const today = gameDateAt(new Date());
-  const { data: puzzles } = await safeRead((db) => listPuzzles(db, today), []);
-  const number = puzzleNumberOn(today);
+  const { today, puzzles } = await getArchive();
+  const todayPuzzle = puzzles.find((puzzle) => puzzle.gameDate === today);
   return (
     <PageShell
       path="/archive"
@@ -57,7 +64,7 @@ export default async function ArchivePage() {
             .
           </p>
         </section>
-        <PlayOfficial number={number} campaign="archive" />
+        <PlayOfficial number={todayPuzzle?.number} campaign="archive" />
       </div>
       <section className="mt-14 narrow" aria-labelledby="archive-faq">
         <h2 id="archive-faq" className="heading">
@@ -78,10 +85,10 @@ export default async function ArchivePage() {
               {
                 question: "Can I play Originle unlimited or in infinite mode?",
                 answer:
-                  "Originle releases one new guest each day. To play more than one round, use the official archive to replay guests from earlier days. Each released guest has its own hints and answer in the table above.",
+                  "Use the official archive to replay guests from earlier days. Each released guest has its own hints and answer in the table above.",
                 body: (
                   <>
-                    Originle releases one new guest each day. To play more than one round, use the{" "}
+                    Use the{" "}
                     <a href={SITE.officialArchiveUrl} className="inline-link" target="_blank" rel="noopener" data-ga-event="official_link_click">
                       official Originle archive
                     </a>{" "}
@@ -91,7 +98,7 @@ export default async function ArchivePage() {
               },
               {
                 question: "Are future Originle answers listed?",
-                answer: "No. The game only publishes a guest on their day, at midnight in New York, so this archive stops at today.",
+                answer: "No. This archive only lists puzzles that Originle has released.",
               },
             ]}
           />

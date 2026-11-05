@@ -9,7 +9,6 @@ import { clueSteps } from "@/lib/official/calculator";
 import { CLOSE_MISS_MAX, CLUES, GUESSES, MAX_SCORE, closeMissPoints, solvedPoints } from "@/lib/official/scoring";
 import { webToolJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { gameDateAt, puzzleNumberOn } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +53,6 @@ const FAQ = [
 ];
 
 export default function ScoreCalculatorPage() {
-  const number = puzzleNumberOn(gameDateAt(new Date()));
   return (
     <PageShell
       path="/originle-score-calculator"
@@ -188,7 +186,7 @@ export default function ScoreCalculatorPage() {
               <dd className="text-right font-semibold tabular-nums">70%</dd>
             </dl>
           </section>
-          <PlayOfficial number={number} campaign="score_calculator" />
+          <PlayOfficial campaign="score_calculator" />
         </aside>
       </div>
       <JsonLd

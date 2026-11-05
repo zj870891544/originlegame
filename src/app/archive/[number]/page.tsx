@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PuzzlePage({ params }: Props) {
   const puzzle = await load(params);
   if (!puzzle) notFound();
-  const { number: todayNumber } = await getToday();
+  const { number: todayNumber, puzzle: todayPuzzle } = await getToday();
   const isToday = puzzle.number === todayNumber;
   const date = formatLongDate(puzzle.gameDate);
   const [previous, next] = await Promise.all([
@@ -139,7 +139,7 @@ export default async function PuzzlePage({ params }: Props) {
           </nav>
         </div>
         <aside className="min-w-0">
-          <PlayOfficial number={todayNumber} campaign="archive_day" />
+          <PlayOfficial number={todayPuzzle?.number} campaign="archive_day" />
         </aside>
       </div>
       <JsonLd

@@ -11,8 +11,7 @@ export default function NotFound() {
     <div className="shell pb-16 pt-12 md:pt-20">
       <h1 className="display max-w-[16ch] text-(length:--text-title)">No guest at this address</h1>
       <p className="mt-5 max-w-[58ch] text-xl leading-snug muted">
-        This page doesn&apos;t exist, or it&apos;s a puzzle whose day hasn&apos;t come yet. Puzzles appear here once Originle releases them
-        at midnight Eastern.
+        This page may have moved, or the puzzle may be unreleased. Browse the archive for published puzzles.
       </p>
       <ul className="mt-8 space-y-3 text-lg">
         <li>

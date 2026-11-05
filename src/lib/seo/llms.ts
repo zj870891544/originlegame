@@ -25,7 +25,7 @@ Guide record first stored: ${puzzle.firstSeenAt}. Guide record last changed: ${p
 
 > ${SITE.description} ${SITE.disclaimer}
 
-Originle (${SITE.officialGameUrl}) is a free daily geography game. Each day a real person appears in eight short video clues and players guess the country they represent in three guesses, scored out of 10,000. A new guest arrives at midnight America/New_York.
+Originle (${SITE.officialGameUrl}) is a free daily geography game. In each released puzzle, a real person appears in eight short video clues and players guess the country they represent in three guesses, scored out of 10,000. The game day starts at midnight in New York. Past puzzles are playable in the official archive.
 
 ${today}
 ${yesterday}

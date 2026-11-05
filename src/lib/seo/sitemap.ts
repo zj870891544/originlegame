@@ -6,10 +6,10 @@ import { PUZZLE_GUIDE_EDITED, puzzleGuideModified } from "./puzzle";
 
 /** Evergreen pages with the date of their last editorial change, never a request or build time. */
 const STATIC_PAGES: [path: string, edited: string][] = [
-  ["/how-to-play", "2026-10-20"],
-  ["/originle-score-calculator", "2026-10-20"],
+  ["/how-to-play", "2026-11-05"],
+  ["/originle-score-calculator", "2026-11-05"],
   ["/originle-solver", "2026-10-20"],
-  ["/guess-where-im-from-game", "2026-10-20"],
+  ["/guess-where-im-from-game", "2026-11-05"],
   ["/games-like-originle", "2026-10-20"],
   ["/about", "2026-10-20"],
   ["/privacy", "2026-10-15"],
@@ -17,7 +17,7 @@ const STATIC_PAGES: [path: string, edited: string][] = [
 ];
 
 /** These listing pages also contain editorial copy, independent of the puzzle records. */
-const LISTING_EDITED = "2026-10-19";
+const LISTING_EDITED = "2026-11-05";
 
 function latestChange(puzzles: PuzzleSummary[], edited?: string): string | undefined {
   return puzzles.reduce<string | undefined>((latest, puzzle) =>
