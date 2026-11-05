@@ -94,7 +94,13 @@ export default async function PuzzlePage({ params }: Props) {
         </>
       }
     >
-      <a href={replayHref} className="btn btn-primary mb-6" target="_blank" rel="noopener" data-ga-event="official_link_click">
+      <a
+        href={replayHref}
+        className="btn btn-primary mb-6"
+        target="_blank"
+        rel="noopener"
+        data-ga-event={hasDirectReplay ? "official_replay_click" : "official_link_click"}
+      >
         {hasDirectReplay ? "Replay this puzzle on Originle" : "Open the official Originle archive"}
       </a>
       <section aria-labelledby="puzzle-facts" className="sheet mb-8 p-5 sm:p-6">

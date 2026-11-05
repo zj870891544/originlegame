@@ -131,12 +131,13 @@ describe("privacy-minded GA attribution", () => {
     trackPageView(MEASUREMENT_ID, "/hints?utm_source=chatgpt.com");
     trackEvent("hint_open", 2);
     trackEvent("answer_reveal", 10);
-    const outbound = "pattern_hacker_click";
-    if (isAnalyticsEvent(outbound)) trackEvent(outbound);
+    for (const outbound of ["official_replay_click", "pattern_hacker_click"]) {
+      if (isAnalyticsEvent(outbound)) trackEvent(outbound);
+      expect(gtag).toHaveBeenCalledWith("event", outbound, { send_to: MEASUREMENT_ID });
+    }
 
     expect(gtag).toHaveBeenCalledWith("event", "hint_open", { send_to: MEASUREMENT_ID, hint_level: 2 });
     expect(gtag).toHaveBeenCalledWith("event", "answer_reveal", { send_to: MEASUREMENT_ID });
-    expect(gtag).toHaveBeenCalledWith("event", outbound, { send_to: MEASUREMENT_ID });
     expect(pageViews()).toHaveLength(1);
   });
 });

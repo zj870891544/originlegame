@@ -26,6 +26,7 @@ test("archive starts with a released puzzle and random selection leads to its of
   const selected = new URL(page.url()).pathname.split("/").at(-1);
   const replay = page.getByRole("link", { name: "Replay this puzzle on Originle" });
   await expect(replay).toHaveAttribute("href", new RegExp(`^https://originle\\.io/fixture-${selected}/\\?day=${selected}&`));
+  await expect(replay).toHaveAttribute("data-ga-event", "official_replay_click");
   await expect(page.locator('details[data-ga-event="answer_reveal"] .stamp')).toBeHidden();
 });
 

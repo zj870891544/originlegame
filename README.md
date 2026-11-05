@@ -83,7 +83,7 @@ npm run sync:official                 # fills the local database from originle.i
   in `src/lib/official/scoring.ts` (checked against the game's scoring script on 2026-10-15). Puzzles #1 and #2 keep
   the original rules.
 - **The official game can't be embedded** (`frame-ancestors 'none'`), so replay links open the corresponding puzzle on
-  originle.io with UTM tags. The separate Pattern Hacker link opens playweird.fun and records a `pattern_hacker_click` event.
+  originle.io with UTM tags and record `official_replay_click`. The Pattern Hacker link opens playweird.fun and records `pattern_hacker_click`.
 - **Page cache** (`src/lib/edge/page-cache.ts`, from krilliontoday): pages are rendered once per data centre and
   reused for 2 minutes (daily pages) or an hour, never past the reset or across deployments. `x-og-cache: hit|miss`.
 - **One address per page**: HTTP and `www` redirect to `https://originlegame.app`; any other host is `noindex`

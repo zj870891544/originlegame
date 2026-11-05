@@ -9,7 +9,7 @@ import { SITE } from "@/lib/seo/site";
 
 export const ANALYTICS_EVENTS = [
   "hint_open", "answer_reveal", "reveal_all", "official_link_click", "roadmap_open", "clue_progress", "score_calculate", "solver_filter",
-  "pattern_hacker_click",
+  "official_replay_click", "pattern_hacker_click",
 ] as const;
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[number];
 
