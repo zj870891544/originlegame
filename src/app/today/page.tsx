@@ -18,12 +18,12 @@ import { formatLongDate } from "@/lib/time/game-day";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { number, puzzle, today } = await getToday();
+  const { puzzle, today } = await getToday();
   return pageMetadata({
-    title: `Originle Answer Today #${number} (${formatLongDate(today)})`,
+    title: puzzle ? `Originle Answer Today #${puzzle.number} (${formatLongDate(today)})` : "Originle Answer Today",
     description: puzzle
-      ? `Where is ${puzzle.guestName} from? Today's Originle answer and solution for #${number} (${formatLongDate(today)}), behind three spoiler-free hints, plus yesterday's answer and the close misses.`
-      : `Check availability for Originle #${number} on ${formatLongDate(today)} or browse hints and answers for released puzzles in the archive.`,
+      ? `Where is ${puzzle.guestName} from? Today's Originle answer and solution for #${puzzle.number} (${formatLongDate(today)}), behind three spoiler-free hints, plus yesterday's answer and the close misses.`
+      : "Check whether today's Originle answer is available or browse hints and answers for published puzzles in the archive.",
     path: "/today",
     ogType: "article",
     ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzleGuideModified(puzzle.updatedAt) } : {}),
@@ -31,13 +31,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TodayPage() {
-  const { number, puzzle, yesterday, today, ok } = await getToday();
+  const state = await getToday();
+  const { puzzle, yesterday, today } = state;
   const faq = [
     {
-      question: `What is the Originle answer today, #${number}?`,
+      question: puzzle ? `What is the Originle answer today, #${puzzle.number}?` : "What is the Originle answer today?",
       answer: puzzle
         ? puzzleAnswerSummary(puzzle)
-        : `This guide has no answer for Originle #${number} on ${formatLongDate(today)}. Past answers are available in the archive.`,
+        : "There is no answer available here for this game day. Past answers are available in the archive.",
     },
     {
       question: "Does a guess of a neighbouring country count?",
@@ -66,7 +67,7 @@ export default async function TodayPage() {
     <PageShell
       path="/today"
       crumbName="Today's answer"
-      title={`Originle answer today: #${number}`}
+      title={puzzle ? `Originle answer today: #${puzzle.number}` : "Originle answer today"}
       lead={
         <>
           {formatLongDate(today)}.{" "}
@@ -98,7 +99,7 @@ export default async function TodayPage() {
               </p>
               <JsonLd
                 data={articleJsonLd({
-                  headline: `Originle #${number} answer and hints (${formatLongDate(today)})`,
+                  headline: `Originle #${puzzle.number} answer and hints (${formatLongDate(today)})`,
                   path: "/today",
                   description: puzzleAnswerSummary(puzzle),
                   citation: `${puzzle.sourceUrl}day.js`,
@@ -108,7 +109,7 @@ export default async function TodayPage() {
               />
             </>
           ) : (
-            <Awaiting number={number} today={today} dbOk={ok} />
+            <Awaiting state={state} placement="today" />
           )}
           {yesterday ? (
             <section aria-labelledby="yesterday" data-reveal-scope>

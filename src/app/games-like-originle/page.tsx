@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PatternHackerLink } from "@/components/puzzle/PatternHackerLink";
 import { JsonLd } from "@/components/shared/JsonLd";
 import Link from "@/components/shared/Link";
 import { PageShell } from "@/components/shared/PageShell";
@@ -8,7 +9,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = pageMetadata({
   title: "Games Like Originle: 10 Daily Geography Puzzles",
   description:
-    "Finished today's Originle? Ten more free daily geography games, from Worldle and Globle to GeoGuessr, and how Originle compares with Worldle and GeoGuessr.",
+    "Find more games after Originle, from Worldle and Globle to GeoGuessr. Try Pattern Hacker for a nine-dot logic puzzle with colour clues.",
   path: "/games-like-originle",
 });
 
@@ -66,9 +67,18 @@ export default function GamesLikeOriginlePage() {
       path="/games-like-originle"
       crumbName="Games like Originle"
       title="Games like Originle"
-      lead="Done with today's guest? These free daily games scratch the same itch: a mystery place, a few clues, and a score to beat tomorrow."
+      lead="Keep guessing with daily geography games, or try a different kind of puzzle with Pattern Hacker."
     >
       <div className="space-y-14">
+        <section aria-labelledby="pattern-hacker" className="sheet flex flex-wrap items-center justify-between gap-5 p-5 sm:p-7">
+          <div>
+            <h2 id="pattern-hacker" className="subheading">Pattern Hacker</h2>
+            <p className="mt-2 max-w-[54ch] muted">
+              Draw a path through nine dots, then use the colour clues to work out the hidden pattern.
+            </p>
+          </div>
+          <PatternHackerLink placement="similar_games" className="btn btn-primary" />
+        </section>
         {GROUPS.map((group) => (
           <section key={group.key} aria-labelledby={`group-${group.key}`}>
             <h2 id={`group-${group.key}`} className="heading">

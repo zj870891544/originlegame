@@ -10,14 +10,11 @@ const STATIC_PAGES: [path: string, edited: string][] = [
   ["/originle-score-calculator", "2026-11-05"],
   ["/originle-solver", "2026-10-20"],
   ["/guess-where-im-from-game", "2026-11-05"],
-  ["/games-like-originle", "2026-10-20"],
+  ["/games-like-originle", "2026-11-05"],
   ["/about", "2026-10-20"],
   ["/privacy", "2026-10-15"],
   ["/terms", "2026-10-15"],
 ];
-
-/** These listing pages also contain editorial copy, independent of the puzzle records. */
-const LISTING_EDITED = "2026-11-05";
 
 function latestChange(puzzles: PuzzleSummary[], edited?: string): string | undefined {
   return puzzles.reduce<string | undefined>((latest, puzzle) =>
@@ -26,7 +23,7 @@ function latestChange(puzzles: PuzzleSummary[], edited?: string): string | undef
 
 /** Missing data must not manufacture a new lastmod on every visit or midnight. */
 export function buildSitemap(puzzles: PuzzleSummary[], today: GameDate): MetadataRoute.Sitemap {
-  const latest = latestChange(puzzles, LISTING_EDITED);
+  const latest = latestChange(puzzles, PUZZLE_GUIDE_EDITED);
   const dailyRecord = puzzles.find((puzzle) => puzzle.gameDate === today)?.updatedAt;
   const daily = dailyRecord ? puzzleGuideModified(dailyRecord) : undefined;
   const modified = (value: string | undefined) => value ? { lastModified: value } : {};

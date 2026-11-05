@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { ArchiveTable } from "@/components/puzzle/ArchiveTable";
+import { PatternHackerLink } from "@/components/puzzle/PatternHackerLink";
 import { PlayOfficial } from "@/components/puzzle/PlayOfficial";
+import { RandomArchivePuzzle } from "@/components/puzzle/RandomArchivePuzzle";
 import { Faq } from "@/components/shared/Faq";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { SITE } from "@/lib/seo/site";
@@ -11,7 +13,7 @@ import { safeRead } from "@/lib/db/client";
 import { listPuzzles } from "@/lib/db/puzzles";
 import { itemListJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { LAUNCH_DATE, formatLongDate, gameDateAt } from "@/lib/time/game-day";
+import { formatLongDate, gameDateAt } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +26,13 @@ const getArchive = cache(async () => {
 export async function generateMetadata(): Promise<Metadata> {
   const { puzzles } = await getArchive();
   const latest = puzzles[0];
+  const earliest = puzzles.at(-1);
+  const range = earliest && latest
+    ? earliest.number === latest.number ? `#${latest.number}` : `#${earliest.number}–#${latest.number}`
+    : null;
   return pageMetadata({
-    title: latest ? `Originle Archive: All Past Answers (#1–#${latest.number})` : "Originle Archive: All Past Answers",
-    description: `Every Originle answer since #1 on ${formatLongDate(LAUNCH_DATE)}: each guest, the date, the country (blurred until you tap it) and a page of hints and close misses.`,
+    title: range ? `Originle Archive: All Past Answers (${range})` : "Originle Archive: All Past Answers",
+    description: "Replay released Originle puzzles and browse each guest, date, answer, spoiler-free hints and close misses.",
     path: "/archive",
   });
 }
@@ -34,13 +40,30 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ArchivePage() {
   const { today, puzzles } = await getArchive();
   const todayPuzzle = puzzles.find((puzzle) => puzzle.gameDate === today);
+  const earliest = puzzles.at(-1);
   return (
     <PageShell
       path="/archive"
       crumbName="Archive"
       title="Originle archive: every past answer"
-      lead={`${puzzles.length} ${puzzles.length === 1 ? "guest" : "guests"} so far, starting with #1 on ${formatLongDate(LAUNCH_DATE)}. Each one has its own page with three hints, the clue titles, the answer and the close misses.`}
+      lead={earliest
+        ? `${puzzles.length} ${puzzles.length === 1 ? "guest" : "guests"} so far, starting with #${earliest.number} on ${formatLongDate(earliest.gameDate)}. Each one has three hints, the clue titles, the answer and the close misses.`
+        : "Browse hints, answers and close misses for released Originle puzzles."}
     >
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-3">
+          {earliest && (
+            <>
+              <Link href={`/archive/${earliest.number}`} className="btn btn-primary">
+                {earliest.number === 1 ? "Start at #1" : `Start with #${earliest.number}`}
+              </Link>
+              <RandomArchivePuzzle numbers={puzzles.map((puzzle) => puzzle.number)} />
+            </>
+          )}
+          <PatternHackerLink placement="archive" className="btn btn-ghost" />
+        </div>
+        <p className="mt-3 text-sm muted">Pattern Hacker is a nine-dot logic puzzle. Use colour clues to crack the pattern.</p>
+      </div>
       {puzzles.length ? (
         <ArchiveTable puzzles={puzzles} today={today} caption="All Originle puzzles, newest first" />
       ) : (

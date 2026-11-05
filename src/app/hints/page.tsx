@@ -22,12 +22,12 @@ import { formatLongDate } from "@/lib/time/game-day";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { number, puzzle, today } = await getToday();
+  const { puzzle, today } = await getToday();
   return pageMetadata({
-    title: `Originle Hints Today #${number}: Spoiler-Free Clues`,
+    title: puzzle ? `Originle Hints Today #${puzzle.number}: Spoiler-Free Clues` : "Originle Hints Today: Spoiler-Free Clues",
     description: puzzle
-      ? `Today's Originle hints for #${number} (${formatLongDate(today)}), no spoilers: the continent, the region and languages, then the spelling. Track which clue you're on. Where is ${puzzle.guestName} from?`
-      : `Check availability for Originle #${number} on ${formatLongDate(today)} or find spoiler-free hints for released puzzles in the archive.`,
+      ? `Today's Originle hints for #${puzzle.number} (${formatLongDate(today)}), no spoilers: the continent, the region and languages, then the spelling. Track which clue you're on. Where is ${puzzle.guestName} from?`
+      : "Check whether today's Originle hints are available or find spoiler-free hints for published puzzles in the archive.",
     path: "/hints",
     ogType: "article",
     ...(puzzle ? { published: puzzle.firstSeenAt, modified: puzzleGuideModified(puzzle.updatedAt) } : {}),
@@ -80,12 +80,13 @@ const FAQ = [
 ];
 
 export default async function HintsPage() {
-  const { number, puzzle, today, ok } = await getToday();
+  const state = await getToday();
+  const { puzzle, today } = state;
   return (
     <PageShell
       path="/hints"
       crumbName="Hints"
-      title={`Originle hints today: #${number}`}
+      title={puzzle ? `Originle hints today: #${puzzle.number}` : "Originle hints today"}
       lead={puzzle
         ? `${formatLongDate(today)}. Each hint gives away a little more than the one before. Open one, play a clue or two on originle.io, and come back if you need the next.`
         : `${formatLongDate(today)}. Check puzzle availability below.`}
@@ -126,7 +127,7 @@ export default async function HintsPage() {
               </div>
               <JsonLd
                 data={articleJsonLd({
-                  headline: `Originle #${number} hints (${formatLongDate(today)})`,
+                  headline: `Originle #${puzzle.number} hints (${formatLongDate(today)})`,
                   path: "/hints",
                   citation: `${puzzle.sourceUrl}day.js`,
                   published: puzzle.firstSeenAt,
@@ -135,7 +136,7 @@ export default async function HintsPage() {
               />
             </section>
           ) : (
-            <Awaiting number={number} today={today} dbOk={ok} />
+            <Awaiting state={state} placement="hints" />
           )}
 
           <section aria-labelledby="reading">
@@ -143,7 +144,7 @@ export default async function HintsPage() {
               How to read each kind of clue
             </h2>
             <p className="mt-3 max-w-[64ch] muted">
-              The clue titles change every day, but most guests cover the same ground. Here is what each kind of clue is good for.
+              The clue titles change with each puzzle, but most guests cover the same ground. Here is what each kind of clue is good for.
             </p>
             <dl className="mt-6 divide-y divide-rule border-y border-rule">
               {CLUE_READING.map((clue) => (

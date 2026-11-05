@@ -63,7 +63,7 @@ describe("daily guide summary", () => {
     countryCode: "TZ",
     sourceUrl: "https://originle.io/previous/",
   };
-  const state: TodayState = { today: puzzle.gameDate, number: puzzle.number, puzzle, yesterday: previous, ok: true };
+  const state: TodayState = { today: puzzle.gameDate, puzzle, yesterday: previous, latestReleased: puzzle, ok: true };
 
   it("anchors the answer to New York's game date, stored timestamps and permanent source", () => {
     const text = llmsText(state);
@@ -77,10 +77,11 @@ describe("daily guide summary", () => {
   });
 
   it("keeps yesterday separate when today's guide has not synced", () => {
-    const text = llmsText({ ...state, puzzle: null });
-    expect(text).toContain("Today is Originle #10");
+    const text = llmsText({ ...state, puzzle: null, latestReleased: previous });
+    expect(text).not.toContain("Today is Originle #");
     expect(text).toContain("This guide has not yet synced the guest and answer");
     expect(text).toContain("does not establish whether the official game has published it");
+    expect(text).toContain("Latest published puzzle: Originle #9 (October 13, 2026), https://originlegame.app/archive/9.");
     expect(text).toContain("Yesterday, Originle #9: Previous represented Tanzania.");
     expect(text).not.toContain("The guest is");
     expect(text).not.toContain("Public source:");
@@ -97,12 +98,26 @@ describe("daily guide summary", () => {
   });
 
   it("does not label a previous puzzle as today's answer if stale data is supplied", () => {
-    const text = llmsText({ ...state, puzzle: previous, yesterday: null });
-    expect(text).toContain("Today is Originle #10");
+    const text = llmsText({ ...state, puzzle: previous, yesterday: null, latestReleased: previous });
+    expect(text).not.toContain("Today is Originle #");
     expect(text).toContain("This guide has not yet synced");
     expect(text).not.toContain("Previous represented");
     expect(text).not.toContain("The guest is Previous");
     expect(text).not.toContain("Public source: https://originle.io/previous/day.js");
+  });
+
+  it("reports the dated hiatus notice and actual latest puzzle after a gap", () => {
+    const text = llmsText({ ...state, today: "2026-11-08", puzzle: null, yesterday: null, latestReleased: { number: 31, gameDate: "2026-11-04" } });
+    expect(text).toContain("The official Originle hiatus notice was confirmed on November 5, 2026 at https://originle.io/.");
+    expect(text).toContain("Latest published puzzle: Originle #31 (November 4, 2026), https://originlegame.app/archive/31.");
+    expect(text).not.toContain("Today is Originle #");
+  });
+
+  it("uses the stored number when a new release follows a calendar gap", () => {
+    const resumedPuzzle = { ...puzzle, number: 32, gameDate: "2026-11-08" };
+    const text = llmsText({ ...state, today: resumedPuzzle.gameDate, puzzle: resumedPuzzle, yesterday: null, latestReleased: resumedPuzzle });
+    expect(text).toContain("Today is Originle #32 (November 8, 2026).");
+    expect(text).not.toContain("hiatus notice");
   });
 });
 
@@ -126,12 +141,12 @@ describe("sitemap content dates", () => {
   });
 
   it("keeps known editorial dates when the database is unavailable, without inventing daily dates", () => {
-    expect(entry([], "/archive")?.lastModified).toBe("2026-11-05");
+    expect(entry([], "/archive")?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
     expect(entry([], "/")?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
-    for (const path of ["/how-to-play", "/originle-score-calculator", "/guess-where-im-from-game"]) {
+    for (const path of ["/how-to-play", "/originle-score-calculator", "/guess-where-im-from-game", "/games-like-originle"]) {
       expect(entry([], path)?.lastModified).toBe("2026-11-05");
     }
-    for (const path of ["/games-like-originle", "/about", "/originle-solver"]) {
+    for (const path of ["/about", "/originle-solver"]) {
       expect(entry([], path)?.lastModified).toBe("2026-10-20");
     }
     expect(entry([], "/today")).not.toHaveProperty("lastModified");
@@ -146,14 +161,14 @@ describe("sitemap content dates", () => {
 
   it("advertises listing edits even when their puzzle records are older", () => {
     expect(entry([summary], "/")?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
-    expect(entry([summary], "/archive")?.lastModified).toBe("2026-11-05");
+    expect(entry([summary], "/archive")?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
     for (const path of ["/today", "/hints"]) {
       expect(entry([summary], path, summary.gameDate)?.lastModified).toBe(PUZZLE_GUIDE_EDITED);
     }
   });
 
   it("uses newer puzzle changes over the listing pages' editorial dates", () => {
-    const newer = { ...summary, number: 32, gameDate: "2026-11-05", updatedAt: "2026-11-05T06:30:00.000Z" };
+    const newer = { ...summary, number: 33, gameDate: "2026-11-06", updatedAt: "2026-11-06T05:01:00.000Z" };
     for (const path of ["/", "/archive"]) {
       expect(entry([newer, summary], path, newer.gameDate)?.lastModified).toBe(newer.updatedAt);
     }

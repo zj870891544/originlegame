@@ -3,7 +3,7 @@ import type { Puzzle } from "@/lib/db/puzzles";
 import { formatLongDate } from "@/lib/time/game-day";
 
 /** Last editorial update to shared puzzle content and play links. */
-export const PUZZLE_GUIDE_EDITED = "2026-11-05T06:11:35.000Z";
+export const PUZZLE_GUIDE_EDITED = "2026-11-05T07:20:48.000Z";
 
 /** Page content can change independently of the official puzzle record. */
 export function puzzleGuideModified(updatedAt: string): string {

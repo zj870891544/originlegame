@@ -78,7 +78,8 @@ const FAQ = [
 ];
 
 export default async function HomePage() {
-  const [{ today, number, puzzle, yesterday, ok }, recent] = await Promise.all([getToday(), getRecent(8)]);
+  const [state, recent] = await Promise.all([getToday(), getRecent(8)]);
+  const { today, puzzle, yesterday } = state;
   const summaries = recent.map((p) => ({ number: p.number, gameDate: p.gameDate, slug: p.slug, guestName: p.guestName, countryCode: p.countryCode, updatedAt: p.updatedAt }));
   return (
     <>
@@ -92,21 +93,23 @@ export default async function HomePage() {
           <p className="mt-3 max-w-[46ch] muted">
             Open spoiler-free hints, check a sourced daily answer, or find a past guest. The answer stays folded until you ask.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/hints" className="btn btn-primary">
-              Get a hint
-            </Link>
-            <Link href="/today" className="btn btn-ghost">
-              Today&apos;s answer
-            </Link>
-            <Link href="/archive" className="btn btn-ghost">
-              Past answers
-            </Link>
-            <a href={officialUrl("/", "home_hero")} className="btn btn-ghost" rel="noopener" data-ga-event="official_link_click">
-              Play at originle.io
-            </a>
-          </div>
-          {yesterday ? (
+          {puzzle ? (
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/hints" className="btn btn-primary">
+                Get a hint
+              </Link>
+              <Link href="/today" className="btn btn-ghost">
+                Today&apos;s answer
+              </Link>
+              <Link href="/archive" className="btn btn-ghost">
+                Past answers
+              </Link>
+              <a href={officialUrl("/", "home_hero")} className="btn btn-ghost" rel="noopener" data-ga-event="official_link_click">
+                Play at originle.io
+              </a>
+            </div>
+          ) : null}
+          {puzzle && yesterday ? (
             <p className="mt-6 text-[0.97rem] muted">
               Looking for yesterday?{" "}
               <Link href={`/archive/${yesterday.number}`} className="inline-link">
@@ -115,7 +118,7 @@ export default async function HomePage() {
             </p>
           ) : null}
         </div>
-        <div>{puzzle ? <PuzzleCard puzzle={puzzle} /> : <Awaiting number={number} today={today} dbOk={ok} />}</div>
+        <div>{puzzle ? <PuzzleCard puzzle={puzzle} /> : <Awaiting state={state} placement="home" />}</div>
       </section>
 
       <section className="shell mt-10">

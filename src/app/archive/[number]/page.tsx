@@ -16,7 +16,7 @@ import { answerCountry } from "@/lib/puzzle/view";
 import { articleJsonLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { puzzleAnswerSummary, puzzleGuideModified } from "@/lib/seo/puzzle";
-import { SITE } from "@/lib/seo/site";
+import { SITE, officialUrl } from "@/lib/seo/site";
 import { formatLongDate, formatWeekday } from "@/lib/time/game-day";
 
 export const dynamic = "force-dynamic";
@@ -48,12 +48,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PuzzlePage({ params }: Props) {
   const puzzle = await load(params);
   if (!puzzle) notFound();
-  const { number: todayNumber, puzzle: todayPuzzle } = await getToday();
-  const isToday = puzzle.number === todayNumber;
+  const { today, puzzle: todayPuzzle } = await getToday();
+  const isToday = puzzle.gameDate === today;
   const date = formatLongDate(puzzle.gameDate);
+  const hasDirectReplay = /^[a-z][a-z0-9-]*$/.test(puzzle.slug) && puzzle.sourceUrl === `${SITE.officialGameUrl}${puzzle.slug}/`;
+  const replayHref = officialUrl(hasDirectReplay ? `/${puzzle.slug}/?day=${puzzle.number}` : "/?archive=1", "archive_day");
   const [previous, next] = await Promise.all([
     puzzle.number > 1 ? getPuzzleByNumber(puzzle.number - 1) : null,
-    puzzle.number < todayNumber ? getPuzzleByNumber(puzzle.number + 1) : null,
+    getPuzzleByNumber(puzzle.number + 1),
   ]);
   const country = answerCountry(puzzle);
   const faq = [
@@ -67,7 +69,7 @@ export default async function PuzzlePage({ params }: Props) {
       answer: `Yes. Every past guest stays playable in the official archive at originle.io, with three guesses${
         rulesForPuzzle(puzzle.number) === "original"
           ? " and the original scoring: a correct answer starts at 10,000 points, loses 1,000 for each extra clue through clue 7, and is worth 2,500 on clue 8 before subtracting 500 per miss."
-          : " and the same scoring as today's puzzle."
+          : " and the current scoring rules."
       }`,
     },
   ];
@@ -80,7 +82,7 @@ export default async function PuzzlePage({ params }: Props) {
       lead={
         <>
           {formatWeekday(puzzle.gameDate)}, {date}. The guest is {puzzle.guestName}.{" "}
-          {isToday ? (
+          {isToday && (
             <>
               This is today&apos;s puzzle; the{" "}
               <Link href="/today" className="inline-link">
@@ -88,18 +90,13 @@ export default async function PuzzlePage({ params }: Props) {
               </Link>{" "}
               has the same answer.
             </>
-          ) : (
-            <>
-              Replay it in the{" "}
-              <a href={SITE.officialArchiveUrl} className="inline-link" target="_blank" rel="noopener" data-ga-event="official_link_click">
-                official archive
-              </a>{" "}
-              before you open anything.
-            </>
           )}
         </>
       }
     >
+      <a href={replayHref} className="btn btn-primary mb-6" target="_blank" rel="noopener" data-ga-event="official_link_click">
+        {hasDirectReplay ? "Replay this puzzle on Originle" : "Open the official Originle archive"}
+      </a>
       <section aria-labelledby="puzzle-facts" className="sheet mb-8 p-5 sm:p-6">
         <h2 id="puzzle-facts" className="subheading">Puzzle at a glance</h2>
         <p className="mt-2 max-w-[66ch] muted">{puzzleGuestSummary(puzzle)}</p>

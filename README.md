@@ -13,13 +13,13 @@ Not affiliated with or endorsed by Originle. Built the same way as krilliontoday
 | `/` | The game, today's guest card (hints, clue titles, answer), how it works, guide links, recent answers, FAQ | originle game |
 | `/today` | Today's answer, close misses with scores, yesterday's answer | originle answer today |
 | `/hints` | Three hints that get stronger, the clue titles, a "which clue are you on" tracker, how to read each kind of clue | originle hints |
-| `/archive` | Every puzzle, answers blurred until tapped | originle archive |
+| `/archive` | Every puzzle with start and random replay links, answers blurred until tapped | originle archive |
 | `/archive/<n>` | One puzzle: guest/date summary, hints, answer, country and distance explanation, source times, folded FAQ, previous/next | originle #n answer, originle <date> answer |
 | `/how-to-play` | Rule card, first round, scoring tables, overlooked rules, tips, comparison table, FAQ | how to play originle |
 | `/originle-score-calculator` | Interactive score calculator (round or pasted share text), clue and miss costs, scoring FAQ | originle score calculator |
 | `/originle-solver` | Country candidates from wrong-guess distances and an optional continent, using independent boundary estimates and adjustable tolerance | originle solver, originle distance solver |
 | `/guess-where-im-from-game` | For people who saw the game but don't know its name: what Originle is, roots vs nationality | guess where someone is from game |
-| `/games-like-originle` | Ten similar daily games | games like originle |
+| `/games-like-originle` | Ten daily games and a featured Pattern Hacker logic puzzle | games like originle |
 | `/about`, `/privacy`, `/terms` | Sources and editorial notes, privacy, terms | |
 
 `/play` is deliberately left free for a game of our own later. Old or alternative addresses
@@ -73,8 +73,8 @@ npm run sync:official                 # fills the local database from originle.i
   in `sync_runs`. Changed pages are announced to IndexNow after the page cache has turned over.
 - **Game day** (`src/lib/time/game-day.ts`): every date is the calendar date in `America/New_York`, puzzle `#n` is
   `n − 1` days after launch, and the rollover follows daylight saving on its own.
-- **No data, no claims.** If today's guest isn't stored yet, pages say it's on its way; an older puzzle is never
-  shown as today's. Future puzzle numbers are 404s.
+- **No data, no claims.** If today's guest isn't stored yet, the guide links to released puzzles and omits the
+  expected puzzle number. During the confirmed hiatus it also links to the official announcement. Future puzzle pages are 404s.
 - **Hints** (`src/lib/puzzle/view.ts`) are written from the data: (1) continent and coastline/landlocked status, (2) region
   and official languages, (3) first letter, letter count and nearby countries in the game's distance table. An editor can replace them
   for a day by setting `hints_json` to a JSON array of three strings. Country facts live in `src/data/countries.ts`
@@ -82,8 +82,8 @@ npm run sync:official                 # fills the local database from originle.i
 - **Close misses** use the game's own distance table: 0 km is a recorded game distance, not proof of a shared land border. Points follow the published formula
   in `src/lib/official/scoring.ts` (checked against the game's scoring script on 2026-10-15). Puzzles #1 and #2 keep
   the original rules.
-- **The official game can't be embedded** (`frame-ancestors 'none'`), so every "play" entry is a link to
-  originle.io with UTM tags.
+- **The official game can't be embedded** (`frame-ancestors 'none'`), so replay links open the corresponding puzzle on
+  originle.io with UTM tags. The separate Pattern Hacker link opens playweird.fun and records a `pattern_hacker_click` event.
 - **Page cache** (`src/lib/edge/page-cache.ts`, from krilliontoday): pages are rendered once per data centre and
   reused for 2 minutes (daily pages) or an hour, never past the reset or across deployments. `x-og-cache: hit|miss`.
 - **One address per page**: HTTP and `www` redirect to `https://originlegame.app`; any other host is `noindex`

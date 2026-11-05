@@ -1,20 +1,29 @@
 import type { TodayState } from "@/lib/puzzle/load";
 import { countryName } from "@/lib/countries";
+import { HIATUS_CONFIRMED_ON, isConfirmedHiatus } from "@/lib/puzzle/availability";
 import { addDays, formatLongDate } from "@/lib/time/game-day";
 import { SITE, absoluteUrl } from "./site";
 
 /** A plain-text summary of the site for language models (llmstxt.org). */
 export function llmsText(state: TodayState): string {
-  const puzzle = state.ok && state.puzzle?.gameDate === state.today && state.puzzle.number === state.number ? state.puzzle : null;
-  const previous = state.ok && state.yesterday?.gameDate === addDays(state.today, -1) && state.yesterday.number === state.number - 1
+  const puzzle = state.ok && state.puzzle?.gameDate === state.today ? state.puzzle : null;
+  const previous = state.ok && state.yesterday?.gameDate === addDays(state.today, -1)
     ? state.yesterday
     : null;
-  const gameDay = `Game date: ${state.today} (America/New_York). Today is Originle #${state.number} (${formatLongDate(state.today)}).`;
-  const availability = state.ok
-    ? "This guide has not yet synced the guest and answer for this game day. This does not establish whether the official game has published it."
-    : "The guide's puzzle database is unavailable, so today's guest and answer could not be checked.";
+  const gameDay = `Game date: ${state.today} (America/New_York).`;
+  const hiatus = isConfirmedHiatus(state);
+  let availability = "The guide's puzzle database is unavailable, so today's guest and answer could not be checked.";
+  if (hiatus) {
+    availability = `The official Originle hiatus notice was confirmed on ${formatLongDate(HIATUS_CONFIRMED_ON)} at ${SITE.officialGameUrl}.`;
+  } else if (state.ok) {
+    availability = "This guide has not yet synced the guest and answer for this game day. This does not establish whether the official game has published it.";
+  }
+  const latest = !puzzle && state.ok && state.latestReleased;
+  if (latest) {
+    availability += ` Latest published puzzle: Originle #${latest.number} (${formatLongDate(latest.gameDate)}), ${absoluteUrl(`/archive/${latest.number}`)}.`;
+  }
   const today = puzzle
-    ? `${gameDay} The guest is ${puzzle.guestName}, who represents ${countryName(puzzle.countryCode)}. Hints: ${absoluteUrl("/hints")}. Answer page: ${absoluteUrl("/today")}. Permanent page for this date: ${absoluteUrl(`/archive/${puzzle.number}`)}. Public source: ${puzzle.sourceUrl}day.js.
+    ? `${gameDay} Today is Originle #${puzzle.number} (${formatLongDate(state.today)}). The guest is ${puzzle.guestName}, who represents ${countryName(puzzle.countryCode)}. Hints: ${absoluteUrl("/hints")}. Answer page: ${absoluteUrl("/today")}. Permanent page for this date: ${absoluteUrl(`/archive/${puzzle.number}`)}. Public source: ${puzzle.sourceUrl}day.js.
 
 Guide record first stored: ${puzzle.firstSeenAt}. Guide record last changed: ${puzzle.updatedAt}. These are this guide's record timestamps, not the official game's publication time.`
     : `${gameDay} ${availability}`;
